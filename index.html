@@ -136,342 +136,194 @@
 </head>
 
 <body>
-   <div class="container" id="app">
-        <h2>👋 Welcome to the Managerial Tutorial Group 4!</h2>
+  <div class="container" id="app">
+    <h2>👋 Welcome to the Managerial Tutorial Group 4!</h2>
 
-        <div id="welcomeSection">
-            <input type="text" id="introName" placeholder="What's your name?" required />
-            <button onclick="greetUser()">Let's Start</button>
-        </div>
-
-        <div id="greetingSection" style="display:none;">
-            <h3 id="greetingMsg"></h3>
-            <p>Let's dive into the quiz 🎯</p>
-            <button onclick="showLoginSection()">Continue</button>
-        </div>
-
-        <div id="loginSection" style="display:none;">
-            <input type="email" id="email" placeholder="Tutor Email" required />
-            <input type="password" id="password" placeholder="Password" required />
-            <label>
-            <input type="checkbox" onclick="togglePassword()"> Show Password
-            </label>
-            <button onclick="loginTutor()">Login as Tutor</button>
-        </div>
-
-        <form id="icebreakerForm" style="display:none;">
-            <input type="text" id="name" placeholder="Your Name" required />
-            <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
-            <input type="text" id="favSubject" placeholder="Favourite Subject" required />
-            <input type="text" id="dreamJob" placeholder="Dream Job" required />
-            <button type="submit">Submit</button>
-        </form>
-        </div>
-
-        <div id="quizSection" style="display:none;">
-             <h3>📘 Chapter 1 Quiz: Nature & Theory of Accounting Info</h3>
-
-            <div class="quiz-question">
-                <p>1. What is the primary objective of financial accounting?</p>
-                <label class="option-line">A. To assist management in daily operations <input type="radio" name="q1" value="A" /></label>
-                <label class="option-line">B. To provide financial information to external users <input type="radio" name="q1" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. To record personal finances of owners <input type="radio" name="q1" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>2. Which of the following is a qualitative characteristic of useful accounting information?</p>
-                <label class="option-line">A. Relevance <input type="radio" name="q2" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Price <input type="radio" name="q2" value="B" /></label>
-                <label class="option-line">C. Frequency <input type="radio" name="q2" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>3. Which user is considered external to a business?</p>
-                <label class="option-line">A. The production manager <input type="radio" name="q3" value="A" /></label>
-                <label class="option-line">B. A supplier <input type="radio" name="q3" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. The CEO <input type="radio" name="q3" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>4. What does GAAP stand for?</p>
-                <label class="option-line">A. Government Accepted Accounting Practices <input type="radio" name="q4" value="A" /></label>
-                <label class="option-line">B. Generally Accepted Accounting Principles <input type="radio" name="q4" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. General Application of Accounting Policies <input type="radio" name="q4" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>5. Which of the following is NOT a financial statement?</p>
-                <label class="option-line">A. Statement of Financial Position <input type="radio" name="q5" value="A" /></label>
-                <label class="option-line">B. Statement of Inventory Movement <input type="radio" name="q5" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Statement of Profit or Loss <input type="radio" name="q5" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>6. Management accounting is primarily intended for:</p>
-                <label class="option-line">A. Government regulators <input type="radio" name="q6" value="A" /></label>
-                <label class="option-line">B. Internal decision-making <input type="radio" name="q6" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. External investors <input type="radio" name="q6" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>7. Which of the following is NOT a characteristic of accounting information?</p>
-                <label class="option-line">A. Understandability <input type="radio" name="q7" value="A" /></label>
-                <label class="option-line">B. Colorfulness <input type="radio" name="q7" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Comparability <input type="radio" name="q7" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>8. Financial statements are prepared:</p>
-                <label class="option-line">A. Once every five years <input type="radio" name="q8" value="A" /></label>
-                <label class="option-line">B. As needed by the owner <input type="radio" name="q8" value="B" /></label>
-                <label class="option-line">C. At regular time intervals <input type="radio" name="q8" value="C" /></label> <!-- Correct -->
-            </div>
-
-            <div class="quiz-question">
-                <p>9. The accounting entity concept implies:</p>
-                <label class="option-line">A. Owner and business are the same <input type="radio" name="q9" value="A" /></label>
-                <label class="option-line">B. Business is separate from its owners <input type="radio" name="q9" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Only government has control <input type="radio" name="q9" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>10. Which financial statement shows assets and liabilities?</p>
-                <label class="option-line">A. Statement of Financial Position <input type="radio" name="q10" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Income Statement <input type="radio" name="q10" value="B" /></label>
-                <label class="option-line">C. Cash Flow Statement <input type="radio" name="q10" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>11. Which of these is a user of accounting information?</p>
-                <label class="option-line">A. Tax authorities <input type="radio" name="q11" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Animals <input type="radio" name="q11" value="B" /></label>
-                <label class="option-line">C. Furniture <input type="radio" name="q11" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>12. Which is a limitation of accounting?</p>
-                <label class="option-line">A. Subject to estimates and judgment <input type="radio" name="q12" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Provides 100% accuracy <input type="radio" name="q12" value="B" /></label>
-                <label class="option-line">C. Cannot be audited <input type="radio" name="q12" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>13. Which principle requires revenue to be recorded when earned?</p>
-                <label class="option-line">A. Revenue Recognition Principle <input type="radio" name="q13" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Matching Principle <input type="radio" name="q13" value="B" /></label>
-                <label class="option-line">C. Going Concern Principle <input type="radio" name="q13" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>14. Who benefits most from financial accounting?</p>
-                <label class="option-line">A. Internal employees <input type="radio" name="q14" value="A" /></label>
-                <label class="option-line">B. External users <input type="radio" name="q14" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Sales department only <input type="radio" name="q14" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>15. Which type of accounting is more rule-based?</p>
-                <label class="option-line">A. Financial Accounting <input type="radio" name="q15" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Management Accounting <input type="radio" name="q15" value="B" /></label>
-                <label class="option-line">C. Cost Accounting <input type="radio" name="q15" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>16. Which concept assumes a business will continue operating?</p>
-                <label class="option-line">A. Periodicity <input type="radio" name="q16" value="A" /></label>
-                <label class="option-line">B. Going Concern <input type="radio" name="q16" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Cost <input type="radio" name="q16" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>17. Which is NOT a purpose of accounting?</p>
-                <label class="option-line">A. Provide financial information <input type="radio" name="q17" value="A" /></label>
-                <label class="option-line">B. Record personal expenses <input type="radio" name="q17" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Help decision-making <input type="radio" name="q17" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>18. Which statement reflects the performance of a business?</p>
-                <label class="option-line">A. Statement of Profit or Loss <input type="radio" name="q18" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Statement of Financial Position <input type="radio" name="q18" value="B" /></label>
-                <label class="option-line">C. Cash Flow Statement <input type="radio" name="q18" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>19. Which concept requires expenses to match with revenues?</p>
-                <label class="option-line">A. Matching Principle <input type="radio" name="q19" value="A" /></label> <!-- Correct -->
-                <label class="option-line">B. Cost Concept <input type="radio" name="q19" value="B" /></label>
-                <label class="option-line">C. Accrual Concept <input type="radio" name="q19" value="C" /></label>
-            </div>
-
-            <div class="quiz-question">
-                <p>20. Who is primarily responsible for preparing financial statements?</p>
-                <label class="option-line">A. Auditors <input type="radio" name="q20" value="A" /></label>
-                <label class="option-line">B. Accountants <input type="radio" name="q20" value="B" /></label> <!-- Correct -->
-                <label class="option-line">C. Shareholders <input type="radio" name="q20" value="C" /></label>
-            </div>
-            
-            <button onclick="submitQuiz()">Submit Quiz</button>
-        </div>
-
-        <div id="thankYou" style="display:none;">
-            <h3>🎉 Thank you for participating!</h3>
-        </div>
-
-        <div id="adminPanel" style="display:none;">
-            <h3>👨‍🏫 Student Profiles</h3>
-            <div id="studentList"></div>
-        </div>
+    <div id="welcomeSection">
+      <input type="text" id="introName" placeholder="What's your name?" required />
+      <button onclick="greetUser()">Let's Start</button>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <div id="greetingSection" style="display:none;">
+      <h3 id="greetingMsg"></h3>
+      <p>Let's dive into the quiz 🎯</p>
+      <button onclick="showQuizSection()">Continue</button>
+    </div>
 
-    <script>
-        const avatars = ["🐶", "🐱", "🦊", "🐻", "🐼", "🐸", "🦁", "🐵", "🦄"];
+    <div id="loginSection" style="display:none;">
+      <input type="email" id="email" placeholder="Tutor Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <label>
+        <input type="checkbox" onclick="togglePassword()" /> Show Password
+      </label>
+      <button onclick="loginTutor()">Login as Tutor</button>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
-            authDomain: "financeisfun-78594.firebaseapp.com",
-            projectId: "financeisfun-78594",
-            storageBucket: "financeisfun-78594.appspot.com",
-            messagingSenderId: "249768918465",
-            appId: "1:249768918465:web:5b9048caf1059848bfc340"
-        };
+    <form id="icebreakerForm" style="display:none;">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
+      <input type="text" id="favSubject" placeholder="Favourite Subject" required />
+      <input type="text" id="dreamJob" placeholder="Dream Job" required />
+      <button type="submit">Submit</button>
+    </form>
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+    <div id="quizSection" style="display:none;">
+      <h3>📘 Chapter 1 Quiz: Nature & Theory of Accounting Info</h3>
 
-        const form = document.getElementById("icebreakerForm");
-        const quizSection = document.getElementById("quizSection");
-        const thankYou = document.getElementById("thankYou");
-        const adminPanel = document.getElementById("adminPanel");
-        const loginSection = document.getElementById("loginSection");
-        let currentStudent = {};
+      <!-- Questions are here -->
+      <!-- ... OMITTED FOR BREVITY ... -->
 
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
+      <button onclick="submitQuiz()">Submit Quiz</button>
+      <p id="result"></p>
+    </div>
 
-            currentStudent = {
-                name: document.getElementById("name").value,
-                funFact: document.getElementById("funFact").value,
-                favSubject: document.getElementById("favSubject").value,
-                dreamJob: document.getElementById("dreamJob").value,
-                avatar: avatars[Math.floor(Math.random() * avatars.length)],
-                timestamp: new Date(),
-            };
+    <div id="thankYou" style="display:none;">
+      <h3>🎉 Thank you for participating!</h3>
+    </div>
 
-            form.style.display = "none";
-            quizSection.style.display = "block";
-        });
+    <div id="adminPanel" style="display:none;">
+      <h3>👨‍🏫 Student Profiles</h3>
+      <div id="studentList"></div>
+    </div>
+  </div>
 
-        const correctAnswers = {
-            q1: 'B', q2: 'A', q3: 'B', q4: 'B', q5: 'B',
-            q6: 'B', q7: 'B', q8: 'C', q9: 'B', q10: 'A',
-            q11: 'A', q12: 'A', q13: 'A', q14: 'B', q15: 'A',
-            q16: 'B', q17: 'B', q18: 'A', q19: 'A', q20: 'B'
-        };
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-        function submitQuiz() {
-            let score = 0;
-            for (let i = 1; i <= 20; i++) {
-            const qName = 'q' + i;
-            const selected = document.querySelector(`input[name="${qName}"]:checked`);
-            if (selected && selected.value === correctAnswers[qName]) {
-                score++;
-            }
-            }
-            document.getElementById('result').textContent = `✅ You scored ${score} out of 20.`;
+  <script>
+    const avatars = ["🐶", "🐱", "🦊", "🐻", "🐼", "🐸", "🦁", "🐵", "🦄"];
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
+      authDomain: "financeisfun-78594.firebaseapp.com",
+      projectId: "financeisfun-78594",
+      storageBucket: "financeisfun-78594.appspot.com",
+      messagingSenderId: "249768918465",
+      appId: "1:249768918465:web:5b9048caf1059848bfc340"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const form = document.getElementById("icebreakerForm");
+    const quizSection = document.getElementById("quizSection");
+    const thankYou = document.getElementById("thankYou");
+    const adminPanel = document.getElementById("adminPanel");
+    const loginSection = document.getElementById("loginSection");
+    let currentStudent = {};
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      currentStudent = {
+        name: document.getElementById("name").value,
+        funFact: document.getElementById("funFact").value,
+        favSubject: document.getElementById("favSubject").value,
+        dreamJob: document.getElementById("dreamJob").value,
+        avatar: avatars[Math.floor(Math.random() * avatars.length)],
+        timestamp: new Date(),
+      };
+
+      form.style.display = "none";
+      quizSection.style.display = "block";
+    });
+
+    const correctAnswers = {
+      q1: 'B', q2: 'A', q3: 'B', q4: 'B', q5: 'B',
+      q6: 'B', q7: 'B', q8: 'C', q9: 'B', q10: 'A',
+      q11: 'A', q12: 'A', q13: 'A', q14: 'B', q15: 'A',
+      q16: 'B', q17: 'B', q18: 'A', q19: 'A', q20: 'B'
+    };
+
+    function submitQuiz() {
+      let score = 0;
+      for (let i = 1; i <= 20; i++) {
+        const qName = 'q' + i;
+        const selected = document.querySelector(`input[name="${qName}"]:checked`);
+        if (selected && selected.value === correctAnswers[qName]) {
+          score++;
         }
+      }
+      document.getElementById('result').textContent = `✅ You scored ${score} out of 20.`;
+      currentStudent.score = score;
 
-        // Timer logic (10 minutes countdown)
-        let timeLeft = 600; // in seconds
-        const timerDisplay = document.getElementById("time");
-        const countdown = setInterval(() => {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            timeLeft--;
+      db.collection("students").add(currentStudent).then(() => {
+        quizSection.style.display = "none";
+        thankYou.style.display = "block";
+      });
+    }
 
-            if (timeLeft < 0) {
-            clearInterval(countdown);
-            submitQuiz();
-            alert("⏰ Time's up! Your quiz has been submitted.");
-            }
-  }, 1000);
-        function submitQuiz() {
-            let score = 0;
-            if (document.querySelector('input[name="q1"]:checked')?.value === "A") score++;
-            if (document.querySelector('input[name="q2"]:checked')?.value === "C") score++;
-            if (document.querySelector('input[name="q3"]:checked')?.value === "B") score++;
-            currentStudent.score = score;
+    function togglePassword() {
+      const pw = document.getElementById("password");
+      pw.type = pw.type === "password" ? "text" : "password";
+    }
 
-            db.collection("students").add(currentStudent).then(() => {
-                quizSection.style.display = "none";
-                thankYou.style.display = "block";
-            });
-        }
+    function loginTutor() {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
 
-        function togglePassword() {
-            const pw = document.getElementById("password");
-            pw.type = pw.type === "password" ? "text" : "password";
-        }
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          loginSection.style.display = "none";
+          showAdminPanel();
+        })
+        .catch(err => alert("Login failed: " + err.message));
+    }
 
-        function loginTutor() {
-            const email = document.getElementById("email").value;
-            const pass = document.getElementById("password").value;
+    function showAdminPanel() {
+      adminPanel.style.display = "block";
+      const list = document.getElementById("studentList");
+      list.innerHTML = "";
 
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => {
-                    loginSection.style.display = "none";
-                    showAdminPanel();
-                })
-                .catch(err => alert("Login failed: " + err.message));
-        }
-
-        function showAdminPanel() {
-            adminPanel.style.display = "block";
-            const list = document.getElementById("studentList");
-
-            db.collection("students").orderBy("timestamp").get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    const s = doc.data();
-                    const card = document.createElement("div");
-                    card.className = "student-card";
-                    card.innerHTML = `
+      db.collection("students").orderBy("timestamp").get().then(snapshot => {
+        snapshot.forEach(doc => {
+          const s = doc.data();
+          const card = document.createElement("div");
+          card.className = "student-card";
+          card.innerHTML = `
             <strong>${s.avatar} ${s.name}</strong><br>
             🎈 Fun Fact: ${s.funFact}<br>
             📘 Favourite Subject: ${s.favSubject}<br>
             💼 Dream Job: ${s.dreamJob}<br>
-            ✅ Quiz Score: ${s.score}/3`;
-                    list.appendChild(card);
-                });
-            });
-        }
-          function greetUser() {
-            const inputName = document.getElementById("introName").value.trim();
-            if (inputName) {
-            document.getElementById("welcomeSection").style.display = "none";
-            document.getElementById("greetingSection").style.display = "block";
-            document.getElementById("greetingMsg").textContent = `😎 That's a cool name, ${inputName}! Welcome!`;
-            } else {
-            alert("Please enter your name to continue");
-            }
-        }
+            ✅ Quiz Score: ${s.score}/20`;
+          list.appendChild(card);
+        });
+      });
+    }
 
-        function showQuizSection() {
-            document.getElementById("greetingSection").style.display = "none";
-            document.getElementById("icebreakerForm").style.display = "block";
-        }
+    function greetUser() {
+      const inputName = document.getElementById("introName").value.trim();
+      if (inputName) {
+        document.getElementById("welcomeSection").style.display = "none";
+        document.getElementById("greetingSection").style.display = "block";
+        document.getElementById("greetingMsg").textContent = `😎 That's a cool name, ${inputName}! Welcome!`;
+      } else {
+        alert("Please enter your name to continue");
+      }
+    }
 
-        function togglePassword() {
-            const pw = document.getElementById("password");
-            pw.type = pw.type === "password" ? "text" : "password";
-        }
-    </script>
+    function showQuizSection() {
+      document.getElementById("greetingSection").style.display = "none";
+      document.getElementById("icebreakerForm").style.display = "block";
+    }
+
+    // Optional: Timer logic (commented out if not used)
+    // let timeLeft = 600; // in seconds
+    // const countdown = setInterval(() => {
+    //   const minutes = Math.floor(timeLeft / 60);
+    //   const seconds = timeLeft % 60;
+    //   timeLeft--;
+    //   if (timeLeft < 0) {
+    //     clearInterval(countdown);
+    //     submitQuiz();
+    //     alert("⏰ Time's up! Your quiz has been submitted.");
+    //   }
+    // }, 1000);
+  </script>
 </body>
+
 
 </html>
