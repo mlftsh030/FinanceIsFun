@@ -160,9 +160,8 @@
     </div>
 
     <form id="icebreakerForm" style="display:none;">
-      <input type="text" id="name" placeholder="Your Name" required />
       <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
-      <input type="text" id="favSubject" placeholder="Favourite Subject" required />
+      <input type="text" id="favSubject" placeholder="Favourite Course" required />
       <input type="text" id="dreamJob" placeholder="Dream Job" required />
       <button type="submit">Submit</button>
     </form>
@@ -358,7 +357,7 @@
       e.preventDefault();
 
       currentStudent = {
-        name: document.getElementById("name").value,
+        name: document.getElementById("introName").value,
         funFact: document.getElementById("funFact").value,
         favSubject: document.getElementById("favSubject").value,
         dreamJob: document.getElementById("dreamJob").value,
