@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script defer src="script.js"></script>
+    <!-- if your code is in a separate JS file -->
+
+    <title>Icebreaker & Quiz App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        input,
+        textarea,
+        button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        .student-card {
+            background: #e7f3ff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+        .quiz-question {
+            margin: 10px 0;
+        }
+        
+        @media(max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h2>🧊 Icebreaker Form</h2>
+
+        <div id="loginSection">
+            <input type="email" id="email" placeholder="Tutor Email" required />
+
+            <input type="password" id="password" placeholder="Password" required />
+            <label>
+                <input type="checkbox" onclick="togglePassword()"> Show Password
+            </label>
+
+            <button onclick="loginTutor()">Login as Tutor</button>
+        </div>
+
+        <form id="icebreakerForm">
+            <input type="text" id="name" placeholder="Your Name" required />
+            <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
+            <input type="text" id="favSubject" placeholder="Favourite Subject" required />
+            <input type="text" id="dreamJob" placeholder="Dream Job" required />
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="quizSection" style="display:none;">
+            <div class="quiz-question">
+                <p>1. What does HTML stand for?</p>
+                <input type="radio" name="q1" value="A"> A. HyperText Markup Language<br>
+                <input type="radio" name="q1" value="B"> B. HighText Machine Language<br>
+                <input type="radio" name="q1" value="C"> C. Hyperlink and Text Markup Language<br>
+            </div>
+
+            <div class="quiz-question">
+                <p>2. Who founded Microsoft?</p>
+                <input type="radio" name="q2" value="A"> A. Steve Jobs<br>
+                <input type="radio" name="q2" value="B"> B. Elon Musk<br>
+                <input type="radio" name="q2" value="C"> C. Bill Gates<br>
+            </div>
+
+            <div class="quiz-question">
+                <p>3. What is 7 + 5?</p>
+                <input type="radio" name="q3" value="A"> A. 10<br>
+                <input type="radio" name="q3" value="B"> B. 12<br>
+                <input type="radio" name="q3" value="C"> C. 14<br>
+            </div>
+
+            <button onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+
+        <div id="thankYou" style="display:none;">
+            <h3>🎉 Thank you for participating!</h3>
+        </div>
+
+        <div id="adminPanel" style="display:none;">
+            <h3>👨‍🏫 Student Profiles</h3>
+            <div id="studentList"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const avatars = ["🐶", "🐱", "🦊", "🐻", "🐼", "🐸", "🦁", "🐵", "🦄"];
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
+            authDomain: "financeisfun-78594.firebaseapp.com",
+            projectId: "financeisfun-78594",
+            storageBucket: "financeisfun-78594.appspot.com",
+            messagingSenderId: "249768918465",
+            appId: "1:249768918465:web:5b9048caf1059848bfc340"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const form = document.getElementById("icebreakerForm");
+        const quizSection = document.getElementById("quizSection");
+        const thankYou = document.getElementById("thankYou");
+        const adminPanel = document.getElementById("adminPanel");
+        const loginSection = document.getElementById("loginSection");
+        let currentStudent = {};
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            currentStudent = {
+                name: document.getElementById("name").value,
+                funFact: document.getElementById("funFact").value,
+                favSubject: document.getElementById("favSubject").value,
+                dreamJob: document.getElementById("dreamJob").value,
+                avatar: avatars[Math.floor(Math.random() * avatars.length)],
+                timestamp: new Date(),
+            };
+
+            form.style.display = "none";
+            quizSection.style.display = "block";
+        });
+
+        function submitQuiz() {
+            let score = 0;
+            if (document.querySelector('input[name="q1"]:checked')?.value === "A") score++;
+            if (document.querySelector('input[name="q2"]:checked')?.value === "C") score++;
+            if (document.querySelector('input[name="q3"]:checked')?.value === "B") score++;
+            currentStudent.score = score;
+
+            db.collection("students").add(currentStudent).then(() => {
+                quizSection.style.display = "none";
+                thankYou.style.display = "block";
+            });
+        }
+
+        function togglePassword() {
+            const pw = document.getElementById("password");
+            pw.type = pw.type === "password" ? "text" : "password";
+        }
+
+        function loginTutor() {
+            const email = document.getElementById("email").value;
+            const pass = document.getElementById("password").value;
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    loginSection.style.display = "none";
+                    showAdminPanel();
+                })
+                .catch(err => alert("Login failed: " + err.message));
+        }
+
+        function showAdminPanel() {
+            adminPanel.style.display = "block";
+            const list = document.getElementById("studentList");
+
+            db.collection("students").orderBy("timestamp").get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    const s = doc.data();
+                    const card = document.createElement("div");
+                    card.className = "student-card";
+                    card.innerHTML = `
+            <strong>${s.avatar} ${s.name}</strong><br>
+            🎈 Fun Fact: ${s.funFact}<br>
+            📘 Favourite Subject: ${s.favSubject}<br>
+            💼 Dream Job: ${s.dreamJob}<br>
+            ✅ Quiz Score: ${s.score}/3`;
+                    list.appendChild(card);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
