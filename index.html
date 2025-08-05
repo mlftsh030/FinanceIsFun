@@ -450,17 +450,17 @@
     }
 
     // Optional: Timer logic (commented out if not used)
-    // let timeLeft = 600; // in seconds
-    // const countdown = setInterval(() => {
-    //   const minutes = Math.floor(timeLeft / 60);
-    //   const seconds = timeLeft % 60;
-    //   timeLeft--;
-    //   if (timeLeft < 0) {
-    //     clearInterval(countdown);
-    //     submitQuiz();
-    //     alert("⏰ Time's up! Your quiz has been submitted.");
-    //   }
-    // }, 1000);
+     let timeLeft = 600; // in seconds
+     const countdown = setInterval(() => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timeLeft--;
+       if (timeLeft < 0) {
+         clearInterval(countdown);
+         submitQuiz();
+         alert("⏰ Time's up! Your quiz has been submitted.");
+       }
+     }, 1000);
   </script>
 </body>
 
