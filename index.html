@@ -22,7 +22,29 @@
             padding: 20px;
             background: #f4f4f4;
         }
-        
+          .quiz-question {
+                margin: 15px 0;
+            }
+            .option-line {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #f0f0f0;
+                padding: 10px 12px;
+                margin: 6px 0;
+                border-radius: 6px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background 0.3s;
+            }
+            .option-line:hover {
+                background: #e0e0e0;
+            }
+            .option-line input[type="radio"] {
+                transform: scale(1.2);
+                cursor: pointer;
+            }
+                    
         .container {
             max-width: 500px;
             margin: auto;
@@ -114,27 +136,37 @@
 </head>
 
 <body>
-    <div class="container" id="app">
-        <h2>🧊 Icebreaker Form</h2>
+   <div class="container" id="app">
+        <h2>👋 Welcome to the Managerial Tutorial Group 4!</h2>
 
-        <div id="loginSection">
+        <div id="welcomeSection">
+            <input type="text" id="introName" placeholder="What's your name?" required />
+            <button onclick="greetUser()">Let's Start</button>
+        </div>
+
+        <div id="greetingSection" style="display:none;">
+            <h3 id="greetingMsg"></h3>
+            <p>Let's dive into the quiz 🎯</p>
+            <button onclick="showLoginSection()">Continue</button>
+        </div>
+
+        <div id="loginSection" style="display:none;">
             <input type="email" id="email" placeholder="Tutor Email" required />
-
             <input type="password" id="password" placeholder="Password" required />
             <label>
-                <input type="checkbox" onclick="togglePassword()"> Show Password
+            <input type="checkbox" onclick="togglePassword()"> Show Password
             </label>
-
             <button onclick="loginTutor()">Login as Tutor</button>
         </div>
 
-        <form id="icebreakerForm">
+        <form id="icebreakerForm" style="display:none;">
             <input type="text" id="name" placeholder="Your Name" required />
             <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
             <input type="text" id="favSubject" placeholder="Favourite Subject" required />
             <input type="text" id="dreamJob" placeholder="Dream Job" required />
             <button type="submit">Submit</button>
         </form>
+        </div>
 
         <div id="quizSection" style="display:none;">
              <h3>📘 Chapter 1 Quiz: Nature & Theory of Accounting Info</h3>
@@ -336,6 +368,40 @@
             quizSection.style.display = "block";
         });
 
+        const correctAnswers = {
+            q1: 'B', q2: 'A', q3: 'B', q4: 'B', q5: 'B',
+            q6: 'B', q7: 'B', q8: 'C', q9: 'B', q10: 'A',
+            q11: 'A', q12: 'A', q13: 'A', q14: 'B', q15: 'A',
+            q16: 'B', q17: 'B', q18: 'A', q19: 'A', q20: 'B'
+        };
+
+        function submitQuiz() {
+            let score = 0;
+            for (let i = 1; i <= 20; i++) {
+            const qName = 'q' + i;
+            const selected = document.querySelector(`input[name="${qName}"]:checked`);
+            if (selected && selected.value === correctAnswers[qName]) {
+                score++;
+            }
+            }
+            document.getElementById('result').textContent = `✅ You scored ${score} out of 20.`;
+        }
+
+        // Timer logic (10 minutes countdown)
+        let timeLeft = 600; // in seconds
+        const timerDisplay = document.getElementById("time");
+        const countdown = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timeLeft--;
+
+            if (timeLeft < 0) {
+            clearInterval(countdown);
+            submitQuiz();
+            alert("⏰ Time's up! Your quiz has been submitted.");
+            }
+  }, 1000);
         function submitQuiz() {
             let score = 0;
             if (document.querySelector('input[name="q1"]:checked')?.value === "A") score++;
@@ -384,6 +450,26 @@
                     list.appendChild(card);
                 });
             });
+        }
+          function greetUser() {
+            const inputName = document.getElementById("introName").value.trim();
+            if (inputName) {
+            document.getElementById("welcomeSection").style.display = "none";
+            document.getElementById("greetingSection").style.display = "block";
+            document.getElementById("greetingMsg").textContent = `😎 That's a cool name, ${inputName}! Welcome!`;
+            } else {
+            alert("Please enter your name to continue");
+            }
+        }
+
+        function showQuizSection() {
+            document.getElementById("greetingSection").style.display = "none";
+            document.getElementById("icebreakerForm").style.display = "block";
+        }
+
+        function togglePassword() {
+            const pw = document.getElementById("password");
+            pw.type = pw.type === "password" ? "text" : "password";
         }
     </script>
 </body>
