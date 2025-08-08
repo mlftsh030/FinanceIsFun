@@ -2,466 +2,740 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script defer src="script.js"></script>
-    <!-- if your code is in a separate JS file -->
-
-    <title>Icebreaker & Quiz App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Financial Management Quiz</title>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
             padding: 20px;
-            background: #f4f4f4;
-        }
-          .quiz-question {
-                margin: 15px 0;
-            }
-            .option-line {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: #f0f0f0;
-                padding: 10px 12px;
-                margin: 6px 0;
-                border-radius: 6px;
-                font-size: 16px;
-                cursor: pointer;
-                transition: background 0.3s;
-            }
-            .option-line:hover {
-                background: #e0e0e0;
-            }
-            .option-line input[type="radio"] {
-                transform: scale(1.2);
-                cursor: pointer;
-            }
-                    
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         
-        input,
-        textarea,
-        button {
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff8a00, #e52e71, #1a2a6c);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #1a2a6c;
+            margin-bottom: 25px;
+            font-size: 28px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        h3 {
+            color: #1a2a6c;
+            margin: 20px 0 15px;
+            font-size: 22px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
             width: 100%;
+            padding: 12px;
             margin: 10px 0;
-            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            box-shadow: 0 0 8px rgba(26, 42, 108, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 15px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .quiz-question {
+            background: #f9f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .quiz-question p {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #1a2a6c;
+        }
+        
+        .option-line {
+            display: block;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .option-line:hover {
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+        
+        #result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .header-section {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .header-section h2 {
+            color: white;
+            border: none;
+        }
+        
+        .module-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .module-info h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .question-counter {
+            text-align: right;
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-top: 10px;
         }
         
         .student-card {
             background: #e7f3ff;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #1a2a6c;
         }
         
-        .quiz-question {
-            margin: 10px 0;
-        }
-
-        .option-label {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 8px 0;
-        padding: 10px;
-        background: #f1f1f1;
-        border-radius: 6px;
-        cursor: pointer;
-        }
-
-        .option-line {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #f0f0f0;
-        padding: 10px 12px;
-        margin: 6px 0;
-        border-radius: 6px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.3s;
-        }
-
-        .option-line:hover {
-        background: #e0e0e0;
-        }
-
-        .option-line input[type="radio"] {
-        transform: scale(1.2);
-        cursor: pointer;
-        }
-
-
-        .option-label input[type="radio"] {
-        margin-left: 10px;
-        }
-
-
-        .quiz-question label {
+        .student-card strong {
+            font-size: 18px;
+            color: #1a2a6c;
             display: block;
-            margin: 5px 0;
-            cursor: pointer;
+            margin-bottom: 8px;
         }
-
-        .quiz-question input[type="radio"] {
-        margin-right: 8px;
-        }
-
         
-        @media(max-width: 600px) {
-            body {
-                padding: 10px;
-            }
+        .avatar {
+            font-size: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        #adminPanel h3 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        #studentList {
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 600px) {
             .container {
                 padding: 15px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 20px;
+            }
+            .quiz-question p {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 
 <body>
-  <div class="container" id="app">
-    <h2>👋 Welcome to the Managerial Tutorial Group 4!</h2>
+    <div class="container" id="app">
+        <div class="header-section">
+            <h2>📊 Personal Financial Management - Module 1 Quiz</h2>
+            <p>University of Cape Town | Department of Finance and Tax</p>
+        </div>
 
-    <div id="welcomeSection">
-      <input type="text" id="introName" placeholder="What's your name?" required />
-      <button onclick="greetUser()">Let's Start</button>
+        <div class="module-info">
+            <h4>Module Topics Covered:</h4>
+            <p>Definition of PFM • Financial Life Cycle • Risk & Return • Financial Goals • Balance Sheets • Cash-Flow Statements • Budgeting</p>
+        </div>
+
+        <div id="welcomeSection">
+            <h3>👋 Welcome to the Tutorial Quiz!</h3>
+            <p>Enter your name below to get started. This quiz will test your understanding of Module 1 concepts.</p>
+            <input type="text" id="introName" placeholder="What's your name?" required />
+            <button onclick="greetUser()">Begin Quiz</button>
+        </div>
+
+        <div id="greetingSection" style="display:none;">
+            <h3 id="greetingMsg"></h3>
+            <p>You'll have 20 multiple-choice questions covering all key topics from Module 1.</p>
+            <button onclick="showQuizSection()">Continue to Quiz</button>
+        </div>
+
+        <div id="icebreakerForm" style="display:none;">
+            <h3>Tell Us About Yourself</h3>
+            <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
+            <input type="text" id="favSubject" placeholder="Favourite Course" required />
+            <input type="text" id="dreamJob" placeholder="Dream Job" required />
+            <button type="button" onclick="submitIcebreaker()">Submit</button>
+        </div>
+
+        <div id="quizSection" style="display:none;">
+            <h3>📘 Module 1: What is Personal Financial Management?</h3>
+            <div class="progress-bar">
+                <div class="progress" id="quizProgress"></div>
+            </div>
+            <div class="question-counter" id="questionCounter">Question 1 of 20</div>
+
+            <form id="quizForm">
+                <div class="quiz-question">
+                    <p>1. According to the module, what does "management" in Personal Financial Management include?</p>
+                    <label class="option-line">A. Only investment decisions <input type="radio" name="q1" value="A" required /></label>
+                    <label class="option-line">B. Planning, organising, and controlling <input type="radio" name="q1" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Only budgeting and expense tracking <input type="radio" name="q1" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>2. Which stage of the personal financial life cycle is characterized by dependence on parents?</p>
+                    <label class="option-line">A. Stage 2 - Single <input type="radio" name="q2" value="A" required /></label>
+                    <label class="option-line">B. Stage 1 - Dependent <input type="radio" name="q2" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Stage 4 - Family <input type="radio" name="q2" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>3. In the financial life cycle, during which stage does retirement planning become the main financial focus?</p>
+                    <label class="option-line">A. Stage 4 - Family <input type="radio" name="q3" value="A" required /></label>
+                    <label class="option-line">B. Stage 5 - Post-Family <input type="radio" name="q3" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Stage 6 - Retirement <input type="radio" name="q3" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>4. What is the fundamental financial concept regarding risk and return?</p>
+                    <label class="option-line">A. Higher risk usually corresponds to lower potential return <input type="radio" name="q4" value="A" required /></label>
+                    <label class="option-line">B. Higher risk usually corresponds to higher potential return <input type="radio" name="q4" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Risk and return are completely unrelated <input type="radio" name="q4" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>5. Which factor does NOT typically influence an individual's financial risk tolerance?</p>
+                    <label class="option-line">A. Personality <input type="radio" name="q5" value="A" required /></label>
+                    <label class="option-line">B. Favorite color <input type="radio" name="q5" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Age <input type="radio" name="q5" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>6. What is the first step in effective financial goal setting?</p>
+                    <label class="option-line">A. Prioritize financial goals <input type="radio" name="q6" value="A" required /></label>
+                    <label class="option-line">B. Identify financial goals <input type="radio" name="q6" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Design appropriate savings plans <input type="radio" name="q6" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>7. How are financial goals typically categorized by time horizon?</p>
+                    <label class="option-line">A. Easy, medium, and difficult <input type="radio" name="q7" value="A" required /></label>
+                    <label class="option-line">B. Short-term, medium-term, and long-term <input type="radio" name="q7" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Personal, family, and business <input type="radio" name="q7" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>8. What is the accounting equation that forms the basis of a balance sheet?</p>
+                    <label class="option-line">A. Income = Expenses + Savings <input type="radio" name="q8" value="A" required /></label>
+                    <label class="option-line">B. Assets = Liabilities + Equity <input type="radio" name="q8" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Revenue - Expenses = Profit <input type="radio" name="q8" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>9. In the Venter family case study, what was their equity value?</p>
+                    <label class="option-line">A. R237,000 <input type="radio" name="q9" value="A" required /></label>
+                    <label class="option-line">B. R1,095,000 <input type="radio" name="q9" value="B" /></label>
+                    <label class="option-line">C. R858,000 <input type="radio" name="q9" value="C" /></label>
+                    <!-- Correct -->
+                </div>
+
+                <div class="quiz-question">
+                    <p>10. What does a cash-flow statement reflect?</p>
+                    <label class="option-line">A. Financial position at a point in time <input type="radio" name="q10" value="A" required /></label>
+                    <label class="option-line">B. Cash income and expenses over a period <input type="radio" name="q10" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Total wealth including non-cash assets <input type="radio" name="q10" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>11. What is the primary purpose of budgeting in personal financial management?</p>
+                    <label class="option-line">A. To restrict spending completely <input type="radio" name="q11" value="A" required /></label>
+                    <label class="option-line">B. Estimation of future income and expenses <input type="radio" name="q11" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. To maximize investment returns <input type="radio" name="q11" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>12. Which of these is NOT a benefit of budgeting mentioned in the module?</p>
+                    <label class="option-line">A. Reveals the full financial picture <input type="radio" name="q12" value="A" required /></label>
+                    <label class="option-line">B. Guarantees wealth accumulation <input type="radio" name="q12" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Identifies potential savings <input type="radio" name="q12" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>13. What is the recommended first step in the budgeting process?</p>
+                    <label class="option-line">A. Construct the budget <input type="radio" name="q13" value="A" required /></label>
+                    <label class="option-line">B. Collect information <input type="radio" name="q13" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Balance and adjust the budget <input type="radio" name="q13" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>14. In the example budget (Table 3), what percentage of "take home" cash was allocated to rental/mortgage?</p>
+                    <label class="option-line">A. 19% <input type="radio" name="q14" value="A" required /></label>
+                    <label class="option-line">B. 26% <input type="radio" name="q14" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. 7% <input type="radio" name="q14" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>15. According to the module, what is the most important point about budgeting?</p>
+                    <label class="option-line">A. It must be precise to the last cent <input type="radio" name="q15" value="A" required /></label>
+                    <label class="option-line">B. It's a personal and situation-specific activity <input type="radio" name="q15" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. It should be done annually rather than monthly <input type="radio" name="q15" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>16. In which financial life cycle phase is the key consideration to preserve existing wealth?</p>
+                    <label class="option-line">A. Accumulation <input type="radio" name="q16" value="A" required /></label>
+                    <label class="option-line">B. Consolidation <input type="radio" name="q16" value="B" /></label>
+                    <label class="option-line">C. Preservation <input type="radio" name="q16" value="C" /></label>
+                    <!-- Correct -->
+                </div>
+
+                <div class="quiz-question">
+                    <p>17. What is a common error in financial goal setting mentioned in the module?</p>
+                    <label class="option-line">A. Setting goals that are too easy to achieve <input type="radio" name="q17" value="A" required /></label>
+                    <label class="option-line">B. Setting overambitious or unachievable goals <input type="radio" name="q17" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Focusing only on short-term goals <input type="radio" name="q17" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>18. What is the difference between assets and equity?</p>
+                    <label class="option-line">A. Assets are what you own, equity is what you owe <input type="radio" name="q18" value="A" required /></label>
+                    <label class="option-line">B. Equity is the portion of assets that actually belongs to you <input type="radio" name="q18" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. There is no difference - they are the same <input type="radio" name="q18" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>19. What should be done with a monthly cash surplus according to the module?</p>
+                    <label class="option-line">A. It must be spent immediately <input type="radio" name="q19" value="A" required /></label>
+                    <label class="option-line">B. It can be used for consumption, investment, or saving <input type="radio" name="q19" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. It should be hidden to avoid taxes <input type="radio" name="q19" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>20. In the personal financial life cycle, which stage typically has the highest appetite for risk?</p>
+                    <label class="option-line">A. Stage 6 - Retirement <input type="radio" name="q20" value="A" required /></label>
+                    <label class="option-line">B. Stage 2 - Single <input type="radio" name="q20" value="B" /></label>
+                    <!-- Correct -->
+                    <label class="option-line">C. Stage 4 - Family <input type="radio" name="q20" value="C" /></label>
+                </div>
+
+                <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+            </form>
+            <p id="result"></p>
+        </div>
+
+        <div id="thankYou" style="display:none;">
+            <h3>🎉 Thank you for completing the quiz!</h3>
+            <p id="finalScore"></p>
+            <p>Review the module materials to strengthen your understanding of any challenging concepts.</p>
+            <button onclick="location.reload()">Take Again</button>
+        </div>
+
+        <div id="loginSection" style="display:none;">
+            <h3>👨‍🏫 Tutor Login</h3>
+            <input type="email" id="email" placeholder="Tutor Email" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <label>
+                <input type="checkbox" onclick="togglePassword()" /> Show Password
+            </label>
+            <button onclick="loginTutor()">Login as Tutor</button>
+        </div>
+
+        <div id="adminPanel" style="display:none;">
+            <h3>👨‍🏫 Student Profiles</h3>
+            <div id="studentList"></div>
+            <button onclick="location.reload()">Back to Quiz</button>
+        </div>
     </div>
 
-    <div id="greetingSection" style="display:none;">
-      <h3 id="greetingMsg"></h3>
-      <p>Let's dive into the quiz 🎯</p>
-      <button onclick="showQuizSection()">Continue</button>
-    </div>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
+            authDomain: "financeisfun-78594.firebaseapp.com",
+            projectId: "financeisfun-78594",
+            storageBucket: "financeisfun-78594.appspot.com",
+            messagingSenderId: "249768918465",
+            appId: "1:249768918465:web:5b9048caf1059848bfc340"
+        };
 
-    <div id="loginSection" style="display:none;">
-      <input type="email" id="email" placeholder="Tutor Email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <label>
-        <input type="checkbox" onclick="togglePassword()" /> Show Password
-      </label>
-      <button onclick="loginTutor()">Login as Tutor</button>
-    </div>
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-    <form id="icebreakerForm" style="display:none;">
-      <textarea id="funFact" placeholder="Fun Fact About You" required></textarea>
-      <input type="text" id="favSubject" placeholder="Favourite Course" required />
-      <input type="text" id="dreamJob" placeholder="Dream Job" required />
-      <button type="submit">Submit</button>
-    </form>
+        // Store correct answers
+        const correctAnswers = {
+            q1: 'B',
+            q2: 'B',
+            q3: 'B',
+            q4: 'B',
+            q5: 'B',
+            q6: 'B',
+            q7: 'B',
+            q8: 'B',
+            q9: 'C',
+            q10: 'B',
+            q11: 'B',
+            q12: 'B',
+            q13: 'B',
+            q14: 'B',
+            q15: 'B',
+            q16: 'C',
+            q17: 'B',
+            q18: 'B',
+            q19: 'B',
+            q20: 'B'
+        };
 
-    <div id="quizSection" style="display:none;">
-      <h3>📘 Chapter 1 Quiz: Nature & Theory of Accounting Info</h3>
+        const avatars = ["🐶", "🐱", "🦊", "🐻", "🐼", "🐸", "🦁", "🐵", "🦄"];
+        let userName = '';
+        let currentStudent = {};
 
-         <div class="quiz-question">
-            <p>1. What is the primary objective of financial accounting?</p>
-            <label class="option-line">A. To assist management in daily operations <input type="radio" name="q1" value="A" /></label>
-            <label class="option-line">B. To provide financial information to external users <input type="radio" name="q1" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. To record personal finances of owners <input type="radio" name="q1" value="C" /></label>
-        </div>
+        function greetUser() {
+            const nameInput = document.getElementById('introName');
+            if (nameInput.value.trim() === '') {
+                alert('Please enter your name to continue.');
+                return;
+            }
 
-        <div class="quiz-question">
-            <p>2. Which of the following is a qualitative characteristic of useful accounting information?</p>
-            <label class="option-line">A. Relevance <input type="radio" name="q2" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Price <input type="radio" name="q2" value="B" /></label>
-            <label class="option-line">C. Frequency <input type="radio" name="q2" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>3. Which user is considered external to a business?</p>
-            <label class="option-line">A. The production manager <input type="radio" name="q3" value="A" /></label>
-            <label class="option-line">B. A supplier <input type="radio" name="q3" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. The CEO <input type="radio" name="q3" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>4. What does GAAP stand for?</p>
-            <label class="option-line">A. Government Accepted Accounting Practices <input type="radio" name="q4" value="A" /></label>
-            <label class="option-line">B. Generally Accepted Accounting Principles <input type="radio" name="q4" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. General Application of Accounting Policies <input type="radio" name="q4" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>5. Which of the following is NOT a financial statement?</p>
-            <label class="option-line">A. Statement of Financial Position <input type="radio" name="q5" value="A" /></label>
-            <label class="option-line">B. Statement of Inventory Movement <input type="radio" name="q5" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Statement of Profit or Loss <input type="radio" name="q5" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>6. Management accounting is primarily intended for:</p>
-            <label class="option-line">A. Government regulators <input type="radio" name="q6" value="A" /></label>
-            <label class="option-line">B. Internal decision-making <input type="radio" name="q6" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. External investors <input type="radio" name="q6" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>7. Which of the following is NOT a characteristic of accounting information?</p>
-            <label class="option-line">A. Understandability <input type="radio" name="q7" value="A" /></label>
-            <label class="option-line">B. Colorfulness <input type="radio" name="q7" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Comparability <input type="radio" name="q7" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>8. Financial statements are prepared:</p>
-            <label class="option-line">A. Once every five years <input type="radio" name="q8" value="A" /></label>
-            <label class="option-line">B. As needed by the owner <input type="radio" name="q8" value="B" /></label>
-            <label class="option-line">C. At regular time intervals <input type="radio" name="q8" value="C" /></label> <!-- Correct -->
-        </div>
-
-        <div class="quiz-question">
-            <p>9. The accounting entity concept implies:</p>
-            <label class="option-line">A. Owner and business are the same <input type="radio" name="q9" value="A" /></label>
-            <label class="option-line">B. Business is separate from its owners <input type="radio" name="q9" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Only government has control <input type="radio" name="q9" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>10. Which financial statement shows assets and liabilities?</p>
-            <label class="option-line">A. Statement of Financial Position <input type="radio" name="q10" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Income Statement <input type="radio" name="q10" value="B" /></label>
-            <label class="option-line">C. Cash Flow Statement <input type="radio" name="q10" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>11. Which of these is a user of accounting information?</p>
-            <label class="option-line">A. Tax authorities <input type="radio" name="q11" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Animals <input type="radio" name="q11" value="B" /></label>
-            <label class="option-line">C. Furniture <input type="radio" name="q11" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>12. Which is a limitation of accounting?</p>
-            <label class="option-line">A. Subject to estimates and judgment <input type="radio" name="q12" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Provides 100% accuracy <input type="radio" name="q12" value="B" /></label>
-            <label class="option-line">C. Cannot be audited <input type="radio" name="q12" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>13. Which principle requires revenue to be recorded when earned?</p>
-            <label class="option-line">A. Revenue Recognition Principle <input type="radio" name="q13" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Matching Principle <input type="radio" name="q13" value="B" /></label>
-            <label class="option-line">C. Going Concern Principle <input type="radio" name="q13" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>14. Who benefits most from financial accounting?</p>
-            <label class="option-line">A. Internal employees <input type="radio" name="q14" value="A" /></label>
-            <label class="option-line">B. External users <input type="radio" name="q14" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Sales department only <input type="radio" name="q14" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>15. Which type of accounting is more rule-based?</p>
-            <label class="option-line">A. Financial Accounting <input type="radio" name="q15" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Management Accounting <input type="radio" name="q15" value="B" /></label>
-            <label class="option-line">C. Cost Accounting <input type="radio" name="q15" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>16. Which concept assumes a business will continue operating?</p>
-            <label class="option-line">A. Periodicity <input type="radio" name="q16" value="A" /></label>
-            <label class="option-line">B. Going Concern <input type="radio" name="q16" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Cost <input type="radio" name="q16" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>17. Which is NOT a purpose of accounting?</p>
-            <label class="option-line">A. Provide financial information <input type="radio" name="q17" value="A" /></label>
-            <label class="option-line">B. Record personal expenses <input type="radio" name="q17" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Help decision-making <input type="radio" name="q17" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>18. Which statement reflects the performance of a business?</p>
-            <label class="option-line">A. Statement of Profit or Loss <input type="radio" name="q18" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Statement of Financial Position <input type="radio" name="q18" value="B" /></label>
-            <label class="option-line">C. Cash Flow Statement <input type="radio" name="q18" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>19. Which concept requires expenses to match with revenues?</p>
-            <label class="option-line">A. Matching Principle <input type="radio" name="q19" value="A" /></label> <!-- Correct -->
-            <label class="option-line">B. Cost Concept <input type="radio" name="q19" value="B" /></label>
-            <label class="option-line">C. Accrual Concept <input type="radio" name="q19" value="C" /></label>
-        </div>
-
-        <div class="quiz-question">
-            <p>20. Who is primarily responsible for preparing financial statements?</p>
-            <label class="option-line">A. Auditors <input type="radio" name="q20" value="A" /></label>
-            <label class="option-line">B. Accountants <input type="radio" name="q20" value="B" /></label> <!-- Correct -->
-            <label class="option-line">C. Shareholders <input type="radio" name="q20" value="C" /></label>
-        </div>
-      <!-- Questions are here -->
-      <!-- ... OMITTED FOR BREVITY ... -->
-
-      <button onclick="submitQuiz()">Submit Quiz</button>
-      <p id="result"></p>
-    </div>
-
-    <div id="thankYou" style="display:none;">
-      <h3>🎉 Thank you for participating!</h3>
-    </div>
-
-    <div id="adminPanel" style="display:none;">
-      <h3>👨‍🏫 Student Profiles</h3>
-      <div id="studentList"></div>
-    </div>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
-  <script>
-    const avatars = ["🐶", "🐱", "🦊", "🐻", "🐼", "🐸", "🦁", "🐵", "🦄"];
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
-      authDomain: "financeisfun-78594.firebaseapp.com",
-      projectId: "financeisfun-78594",
-      storageBucket: "financeisfun-78594.appspot.com",
-      messagingSenderId: "249768918465",
-      appId: "1:249768918465:web:5b9048caf1059848bfc340"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    const form = document.getElementById("icebreakerForm");
-    const quizSection = document.getElementById("quizSection");
-    const thankYou = document.getElementById("thankYou");
-    const adminPanel = document.getElementById("adminPanel");
-    const loginSection = document.getElementById("loginSection");
-    let currentStudent = {};
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      currentStudent = {
-        name: document.getElementById("introName").value,
-        funFact: document.getElementById("funFact").value,
-        favSubject: document.getElementById("favSubject").value,
-        dreamJob: document.getElementById("dreamJob").value,
-        avatar: avatars[Math.floor(Math.random() * avatars.length)],
-        timestamp: new Date(),
-      };
-
-      form.style.display = "none";
-      quizSection.style.display = "block";
-    });
-
-    const correctAnswers = {
-      q1: 'B', q2: 'A', q3: 'B', q4: 'B', q5: 'B',
-      q6: 'B', q7: 'B', q8: 'C', q9: 'B', q10: 'A',
-      q11: 'A', q12: 'A', q13: 'A', q14: 'B', q15: 'A',
-      q16: 'B', q17: 'B', q18: 'A', q19: 'A', q20: 'B'
-    };
-
-    function submitQuiz() {
-      let score = 0;
-      for (let i = 1; i <= 20; i++) {
-        const qName = 'q' + i;
-        const selected = document.querySelector(`input[name="${qName}"]:checked`);
-        if (selected && selected.value === correctAnswers[qName]) {
-          score++;
+            userName = nameInput.value.trim();
+            document.getElementById('greetingMsg').textContent = `Hello, ${userName}! Ready to test your knowledge?`;
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('greetingSection').style.display = 'block';
         }
-      }
-      document.getElementById('result').textContent = `✅ You scored ${score} out of 20.`;
-      currentStudent.score = score;
 
-      db.collection("students").add(currentStudent).then(() => {
-        quizSection.style.display = "none";
-        thankYou.style.display = "block";
-      });
-    }
+        function showQuizSection() {
+            document.getElementById('greetingSection').style.display = 'none';
+            document.getElementById('icebreakerForm').style.display = 'block';
+        }
 
-    function togglePassword() {
-      const pw = document.getElementById("password");
-      pw.type = pw.type === "password" ? "text" : "password";
-    }
+        function submitIcebreaker() {
+            const funFact = document.getElementById('funFact').value.trim();
+            const favSubject = document.getElementById('favSubject').value.trim();
+            const dreamJob = document.getElementById('dreamJob').value.trim();
 
-    function loginTutor() {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
+            if (!funFact || !favSubject || !dreamJob) {
+                alert('Please complete all fields before proceeding.');
+                return;
+            }
 
-      auth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          loginSection.style.display = "none";
-          showAdminPanel();
-        })
-        .catch(err => alert("Login failed: " + err.message));
-    }
+            currentStudent = {
+                name: userName,
+                funFact: funFact,
+                favSubject: favSubject,
+                dreamJob: dreamJob,
+                avatar: avatars[Math.floor(Math.random() * avatars.length)],
+                timestamp: new Date()
+            };
 
-    function showAdminPanel() {
-      adminPanel.style.display = "block";
-      const list = document.getElementById("studentList");
-      list.innerHTML = "";
+            document.getElementById('icebreakerForm').style.display = 'none';
+            document.getElementById('quizSection').style.display = 'block';
+            updateProgressBar();
+        }
 
-      db.collection("students").orderBy("timestamp").get().then(snapshot => {
-        snapshot.forEach(doc => {
-          const s = doc.data();
-          const card = document.createElement("div");
-          card.className = "student-card";
-          card.innerHTML = `
-            <strong>${s.avatar} ${s.name}</strong><br>
-            🎈 Fun Fact: ${s.funFact}<br>
-            📘 Favourite Subject: ${s.favSubject}<br>
-            💼 Dream Job: ${s.dreamJob}<br>
-            ✅ Quiz Score: ${s.score}/20`;
-          list.appendChild(card);
+        function updateProgressBar() {
+            const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answered / 20) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            document.getElementById('questionCounter').textContent = `Question ${answered+1} of 20`;
+        }
+
+        // Add event listeners to radio buttons to update progress
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updateProgressBar);
         });
-      });
-    }
 
-    function greetUser() {
-      const inputName = document.getElementById("introName").value.trim();
-      if (inputName) {
-        document.getElementById("welcomeSection").style.display = "none";
-        document.getElementById("greetingSection").style.display = "block";
-        document.getElementById("greetingMsg").textContent = `😎 That's a cool name, ${inputName}! Welcome!`;
-      } else {
-        alert("Please enter your name to continue");
-      }
-    }
+        function submitQuiz() {
+            let score = 0;
+            const form = document.getElementById('quizForm');
 
-    function showQuizSection() {
-      document.getElementById("greetingSection").style.display = "none";
-      document.getElementById("icebreakerForm").style.display = "block";
-    }
+            // Check if all questions are answered
+            let allAnswered = true;
+            for (let i = 1; i <= 20; i++) {
+                const questionName = `q${i}`;
+                if (!document.querySelector(`input[name="${questionName}"]:checked`)) {
+                    allAnswered = false;
+                    break;
+                }
+            }
 
-    // Optional: Timer logic (commented out if not used)
-     let timeLeft = 600; // in seconds
-     const countdown = setInterval(() => {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timeLeft--;
-       if (timeLeft < 0) {
-         clearInterval(countdown);
-         submitQuiz();
-         alert("⏰ Time's up! Your quiz has been submitted.");
-       }
-     }, 1000);
-  </script>
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            // Calculate score
+            for (let i = 1; i <= 20; i++) {
+                const questionName = `q${i}`;
+                const selected = document.querySelector(`input[name="${questionName}"]:checked`).value;
+
+                if (selected === correctAnswers[questionName]) {
+                    score++;
+                    // Highlight correct answer
+                    const correctOption = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                } else {
+                    // Highlight correct answer and incorrect selection
+                    const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`).parentElement;
+                    selectedOption.classList.add('incorrect');
+
+                    const correctOption = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                }
+            }
+
+            // Show results
+            const percentage = Math.round((score / 20) * 100);
+            let message = '';
+
+            if (percentage >= 80) {
+                message = `🎉 Excellent work, ${userName}! You scored ${score}/20 (${percentage}%)`;
+            } else if (percentage >= 60) {
+                message = `👍 Good job, ${userName}! You scored ${score}/20 (${percentage}%)`;
+            } else {
+                message = `📚 Keep studying, ${userName}. You scored ${score}/20 (${percentage}%)`;
+            }
+
+            document.getElementById('result').textContent = message;
+            document.getElementById('result').className = percentage >= 60 ? 'correct' : 'incorrect';
+
+            // Scroll to results
+            document.getElementById('result').scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // Disable form after submission
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+
+            // Save student data
+            currentStudent.score = score;
+            currentStudent.percentage = percentage;
+
+            db.collection("students").add(currentStudent)
+                .then(() => {
+                    // Change submit button to show thank you
+                    const submitBtn = form.querySelector('button');
+                    submitBtn.textContent = 'View Results';
+                    submitBtn.onclick = function() {
+                        document.getElementById('quizSection').style.display = 'none';
+                        document.getElementById('thankYou').style.display = 'block';
+                        document.getElementById('finalScore').textContent = `Final Score: ${score}/20 (${percentage}%)`;
+                    };
+                })
+                .catch(error => {
+                    console.error("Error saving student data: ", error);
+                    alert("There was an error saving your results. Please try again.");
+                });
+        }
+
+        function togglePassword() {
+            const pw = document.getElementById("password");
+            pw.type = pw.type === "password" ? "text" : "password";
+        }
+
+        function loginTutor() {
+            const email = document.getElementById("email").value;
+            const pass = document.getElementById("password").value;
+
+            if (!email || !pass) {
+                alert("Please enter both email and password.");
+                return;
+            }
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    document.getElementById('loginSection').style.display = 'none';
+                    showAdminPanel();
+                })
+                .catch(err => alert("Login failed: " + err.message));
+        }
+
+        function showAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'block';
+            const list = document.getElementById('studentList');
+            list.innerHTML = '';
+
+            db.collection("students").orderBy("timestamp", "desc").get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        list.innerHTML = '<p>No student submissions yet.</p>';
+                        return;
+                    }
+
+                    snapshot.forEach(doc => {
+                        const s = doc.data();
+                        const card = document.createElement('div');
+                        card.className = 'student-card';
+                        card.innerHTML = `
+                            <div><span class="avatar">${s.avatar}</span><strong>${s.name}</strong></div>
+                            <p>🎈 Fun Fact: ${s.funFact}</p>
+                            <p>📘 Favourite Course: ${s.favSubject}</p>
+                            <p>💼 Dream Job: ${s.dreamJob}</p>
+                            <p>✅ Quiz Score: ${s.score}/20 (${s.percentage}%)</p>
+                            <p>📅 Submitted: ${s.timestamp.toDate().toLocaleString()}</p>
+                        `;
+                        list.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error getting student data: ", error);
+                    list.innerHTML = '<p>Error loading student data. Please try again later.</p>';
+                });
+        }
+
+        // Check if user is tutor
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('welcomeSection').style.display = 'none';
+                document.getElementById('greetingSection').style.display = 'none';
+                document.getElementById('icebreakerForm').style.display = 'none';
+                document.getElementById('quizSection').style.display = 'none';
+                document.getElementById('thankYou').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'none';
+                showAdminPanel();
+            } else {
+                document.getElementById('loginSection').style.display = 'block';
+            }
+        });
+    </script>
 </body>
-
 
 </html>
