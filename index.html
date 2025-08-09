@@ -287,6 +287,66 @@
         .student-info p {
             margin: 5px 0;
         }
+        /* Add styles for password management */
+        .password-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4b6cb7;
+        }
+        
+        .password-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .password-form .form-group {
+            margin-bottom: 0;
+        }
+        
+        .toggle-password {
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            border-left: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .input-group {
+            display: flex;
+        }
+        
+        .input-group input {
+            border-radius: 4px 0 0 4px !important;
+        }
+        
+        .password-btn {
+            grid-column: span 2;
+            justify-self: start;
+        }
+        
+        .password-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .password-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .password-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -383,6 +443,38 @@
                 </div>
             </div>
         </div>
+        <!-- Password change -->
+        <div class="password-section">
+            <h3>Password Management</h3>
+            <div class="password-form">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <div class="input-group">
+                        <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password">
+                        <div class="toggle-password">👁️</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="input-group">
+                        <input type="password" id="newPassword" class="form-control" placeholder="At least 6 characters">
+                        <div class="toggle-password">👁️</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <div class="input-group">
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Retype new password">
+                        <div class="toggle-password">👁️</div>
+                    </div>
+                </div>
+                
+                <button id="changePasswordBtn" class="btn password-btn">Change Password</button>
+                <div id="passwordMessage" class="password-message"></div>
+            </div>
+        </div>
 
         <!-- Admin Dashboard -->
         <div id="adminDashboardView" class="view">
@@ -433,707 +525,813 @@
         </div>
     </div>
 
-     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
-            authDomain: "financeisfun-78594.firebaseapp.com",
-            projectId: "financeisfun-78594",
-            storageBucket: "financeisfun-78594.appspot.com",
-            messagingSenderId: "249768918465",
-            appId: "1:249768918465:web:5b9048caf1059848bfc340"
-        };
+   <script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
+        authDomain: "financeisfun-78594.firebaseapp.com",
+        projectId: "financeisfun-78594",
+        storageBucket: "financeisfun-78594.appspot.com",
+        messagingSenderId: "249768918465",
+        appId: "1:249768918465:web:5b9048caf1059848bfc340"
+    };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-        // Global state
-        const appState = {
-            currentUser: null,
-            currentStudent: null,
-            currentCourse: null,
-            currentWeek: null,
-            quizTimer: null,
-            quizTimeLeft: 600,
-            courses: {},
-            quizAnswers: {}
-        };
+    // Global state
+    const appState = {
+        currentUser: null,
+        currentStudent: null,
+        currentCourse: null,
+        currentWeek: null,
+        quizTimer: null,
+        quizTimeLeft: 600,
+        courses: {},
+        quizAnswers: {}
+    };
 
-        // DOM Elements
-        const views = {
-            login: document.getElementById('loginView'),
-            studentDashboard: document.getElementById('studentDashboardView'),
-            course: document.getElementById('courseView'),
-            quiz: document.getElementById('quizView'),
-            stats: document.getElementById('statsView'),
-            adminDashboard: document.getElementById('adminDashboardView')
-        };
+    // DOM Elements
+    const views = {
+        login: document.getElementById('loginView'),
+        studentDashboard: document.getElementById('studentDashboardView'),
+        course: document.getElementById('courseView'),
+        quiz: document.getElementById('quizView'),
+        stats: document.getElementById('statsView'),
+        adminDashboard: document.getElementById('adminDashboardView')
+    };
 
-        // View management
-        function showView(viewName) {
-            Object.values(views).forEach(view => {
-                view.classList.remove('active-view');
+    // View management
+    function showView(viewName) {
+        Object.values(views).forEach(view => {
+            view.classList.remove('active-view');
+        });
+        views[viewName].classList.add('active-view');
+    }
+
+    // Initialize Firestore collections
+    function initializeFirestore() {
+        const collections = ['courses', 'students', 'quizResults'];
+        
+        collections.forEach(collection => {
+            db.collection(collection).get().then(snapshot => {
+                if (snapshot.empty) {
+                    db.collection(collection).doc('init').set({
+                        initialized: true,
+                        timestamp: new Date()
+                    });
+                }
+            }).catch(error => {
+                console.error(`Error initializing ${collection}: `, error);
             });
-            views[viewName].classList.add('active-view');
-        }
-
-        // Initialize Firestore collections
-        function initializeFirestore() {
-            const collections = ['courses', 'students', 'quizResults'];
-            
-            collections.forEach(collection => {
-                db.collection(collection).get().then(snapshot => {
-                    if (snapshot.empty) {
-                        db.collection(collection).doc('init').set({
-                            initialized: true,
-                            timestamp: new Date()
-                        });
-                    }
-                }).catch(error => {
-                    console.error(`Error initializing ${collection}: `, error);
-                });
-            });
-            
-            // CREATE TEST COURSE IF NOT EXISTS
-            db.collection("courses").where("name", "==", "Personal Financial Management").get()
-                .then(querySnapshot => {
-                    if (querySnapshot.empty) {
-                        db.collection("courses").add({
-                            name: "Personal Financial Management",
-                            weeks: 13,
-                            createdAt: new Date(),
-                            weeksData: Array.from({length: 13}, (_, i) => ({
-                                weekNumber: i + 1,
-                                quiz: {},
-                                stats: {}
-                            }))
-                        }).then(() => {
-                            console.log("Test course created");
-                            if (appState.currentUser) loadCourses();
-                        });
-                    }
-                });
-        }
-
-        // Initialize the app
-        function initApp() {
-            initializeFirestore();
-            
-            // Check auth state
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    appState.currentUser = user;
-                    
-                    if (user.email.includes('admin')) {
-                        // Admin user
-                        document.getElementById('userName').textContent = user.email;
-                        document.getElementById('userInfo').classList.remove('hidden');
-                        showView('adminDashboard');
-                        loadCourses();
-                        loadStudents();
-                    } else {
-                        // Student user
-                        fetchStudentProfile(user.email)
-                            .then(student => {
-                                appState.currentStudent = student;
-                                document.getElementById('studentName').textContent = student.name || 'Student';
-                                document.getElementById('studentNumber').textContent = student.studentId;
-                                document.getElementById('studentEmail').textContent = student.email;
-                                
-                                document.getElementById('userName').textContent = student.studentId;
-                                document.getElementById('userInfo').classList.remove('hidden');
-                                
-                                showView('studentDashboard');
-                                loadCourses();
-                            });
-                    }
-                } else {
-                    appState.currentUser = null;
-                    appState.currentStudent = null;
-                    document.getElementById('userInfo').classList.add('hidden');
-                    showView('login');
+        });
+        
+        // Create test course if not exists
+        db.collection("courses").where("name", "==", "Personal Financial Management").get()
+            .then(querySnapshot => {
+                if (querySnapshot.empty) {
+                    db.collection("courses").add({
+                        name: "Personal Financial Management",
+                        weeks: 13,
+                        createdAt: new Date(),
+                        weeksData: Array.from({length: 13}, (_, i) => ({
+                            weekNumber: i + 1,
+                            quiz: {},
+                            stats: {}
+                        }))
+                    }).then(() => {
+                        console.log("Test course created");
+                        if (appState.currentUser) loadCourses();
+                    });
                 }
             });
-            
-            // Event listeners
-            document.getElementById('studentLoginBtn').addEventListener('click', studentLogin);
-            document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
-            document.getElementById('logoutBtn').addEventListener('click', logout);
-            document.getElementById('backToCoursesBtn').addEventListener('click', () => showView('studentDashboard'));
-            document.getElementById('backToWeeksBtn').addEventListener('click', () => showCourseView(appState.currentCourse));
-            document.getElementById('backToWeeksStatsBtn').addEventListener('click', () => showCourseView(appState.currentCourse));
-            document.getElementById('addCourseBtn').addEventListener('click', showAddCourseForm);
-            document.getElementById('viewStudentsBtn').addEventListener('click', showViewStudents);
-            document.getElementById('viewResponsesBtn').addEventListener('click', showViewResponses);
-            document.getElementById('saveCourseBtn').addEventListener('click', saveCourse);
-            document.getElementById('submitQuizBtn').addEventListener('click', submitQuiz);
-            document.getElementById('responseCourse').addEventListener('change', loadResponseData);
-        }
+    }
 
-        // Student login
-        function studentLogin() {
-            const studentId = document.getElementById('studentId').value.trim().toLowerCase();
-            const password = document.getElementById('password').value;
-            
-            if (!studentId || !password) {
-                alert('Please enter both student ID and password');
-                return;
+    // Initialize the app
+    function initApp() {
+        initializeFirestore();
+        
+        // Check auth state
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                appState.currentUser = user;
+                
+                if (user.email.includes('admin')) {
+                    // Admin user
+                    document.getElementById('userName').textContent = user.email;
+                    document.getElementById('userInfo').classList.remove('hidden');
+                    showView('adminDashboard');
+                    loadCourses();
+                    loadStudents();
+                } else {
+                    // Student user
+                    fetchStudentProfile(user.email)
+                        .then(student => {
+                            appState.currentStudent = student;
+                            document.getElementById('studentName').textContent = student.name || 'Student';
+                            document.getElementById('studentNumber').textContent = student.studentId;
+                            document.getElementById('studentEmail').textContent = student.email;
+                            
+                            document.getElementById('userName').textContent = student.studentId;
+                            document.getElementById('userInfo').classList.remove('hidden');
+                            
+                            showView('studentDashboard');
+                            loadCourses();
+                            
+                            // Setup password handlers
+                            setupPasswordHandlers();
+                        });
+                }
+            } else {
+                appState.currentUser = null;
+                appState.currentStudent = null;
+                document.getElementById('userInfo').classList.add('hidden');
+                showView('login');
             }
-            
-            // Format email
-            const email = `${studentId}@student.example.com`;
-            
-            auth.signInWithEmailAndPassword(email, password)
+        });
+        
+        // Event listeners
+        document.getElementById('studentLoginBtn').addEventListener('click', studentLogin);
+        document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('backToCoursesBtn').addEventListener('click', () => showView('studentDashboard'));
+        document.getElementById('backToWeeksBtn').addEventListener('click', () => showCourseView(appState.currentCourse));
+        document.getElementById('backToWeeksStatsBtn').addEventListener('click', () => showCourseView(appState.currentCourse));
+        document.getElementById('addCourseBtn').addEventListener('click', showAddCourseForm);
+        document.getElementById('viewStudentsBtn').addEventListener('click', showViewStudents);
+        document.getElementById('viewResponsesBtn').addEventListener('click', showViewResponses);
+        document.getElementById('saveCourseBtn').addEventListener('click', saveCourse);
+        document.getElementById('submitQuizBtn').addEventListener('click', submitQuiz);
+        document.getElementById('responseCourse').addEventListener('change', loadResponseData);
+        
+        // Password visibility toggle
+        document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.textContent = '🙈';
+                } else {
+                    input.type = 'password';
+                    this.textContent = '👁️';
+                }
+            });
+        });
+    }
+
+    // Student login
+    function studentLogin() {
+        const studentId = document.getElementById('studentId').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+        
+        if (!studentId || !password) {
+            alert('Please enter both student ID and password');
+            return;
+        }
+        
+        // Format email
+        const email = `${studentId}@student.example.com`;
+        
+        // MOCK LOGIN FOR TEST STUDENT
+        if (studentId === 'abcdef123' && password === '123456') {
+            auth.signInWithEmailAndPassword(email, '123456')
                 .catch(error => {
-                    // If user doesn't exist, create a new account
+                    // Create account if it doesn't exist
                     if (error.code === 'auth/user-not-found') {
-                        auth.createUserWithEmailAndPassword(email, password)
+                        auth.createUserWithEmailAndPassword(email, '123456')
                             .then(userCredential => {
-                                // Create student profile
-                                createStudentProfile(studentId, userCredential.user.email);
+                                createStudentProfile('abcdef123', email);
                             })
                             .catch(createError => {
-                                alert(`Error creating account: ${createError.message}`);
+                                alert(`Error creating test account: ${createError.message}`);
                             });
                     } else {
                         alert(`Login failed: ${error.message}`);
                     }
                 });
+            return;
         }
-
-        // Create student profile
-        function createStudentProfile(studentId, email) {
-            // ADD TEST STUDENT DATA
-            db.collection("students").doc(studentId).set({
-                studentId: studentId,
-                email: email,
-                name: "Test Student",
-                avatar: "👨‍🎓",
-                funFact: "I love learning!",
-                favSubject: "Finance",
-                dreamJob: "Financial Analyst",
-                createdAt: new Date(),
-                courses: {}
-            })
-            .then(() => {
-                console.log(`Student profile created for ${studentId}`);
-            })
+        
+        // Regular login
+        auth.signInWithEmailAndPassword(email, password)
             .catch(error => {
-                console.error("Error creating student profile: ", error);
+                // If user doesn't exist, create a new account
+                if (error.code === 'auth/user-not-found') {
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .then(userCredential => {
+                            createStudentProfile(studentId, userCredential.user.email);
+                        })
+                        .catch(createError => {
+                            alert(`Error creating account: ${createError.message}`);
+                        });
+                } else {
+                    alert(`Login failed: ${error.message}`);
+                }
             });
-        }
+    }
 
-        // Fetch student profile
-        function fetchStudentProfile(email) {
-            const studentId = email.split('@')[0];
-            return db.collection("students").doc(studentId).get()
-                .then(doc => {
-                    if (doc.exists) {
-                        return doc.data();
-                    } else {
-                        // Create profile if it doesn't exist
-                        return db.collection("students").doc(studentId).set({
+    // Create student profile
+    function createStudentProfile(studentId, email) {
+        // Special handling for test student
+        const isTestStudent = studentId === 'abcdef123';
+        
+        db.collection("students").doc(studentId).set({
+            studentId: studentId,
+            email: email,
+            name: isTestStudent ? "Test Student" : "New Student",
+            avatar: isTestStudent ? "👨‍🎓" : "👤",
+            funFact: isTestStudent ? "I'm a test account" : "I'm new here",
+            favSubject: isTestStudent ? "Finance" : "Not specified",
+            dreamJob: isTestStudent ? "Financial Analyst" : "Not specified",
+            createdAt: new Date(),
+            courses: {}
+        })
+        .then(() => {
+            console.log(`Student profile created for ${studentId}`);
+        })
+        .catch(error => {
+            console.error("Error creating student profile: ", error);
+        });
+    }
+
+    // Fetch student profile
+    function fetchStudentProfile(email) {
+        const studentId = email.split('@')[0];
+        return db.collection("students").doc(studentId).get()
+            .then(doc => {
+                if (doc.exists) {
+                    return doc.data();
+                } else {
+                    // Create profile if it doesn't exist
+                    return db.collection("students").doc(studentId).set({
+                        studentId: studentId,
+                        email: email,
+                        name: "Student",
+                        createdAt: new Date(),
+                        courses: {}
+                    }).then(() => {
+                        return {
                             studentId: studentId,
                             email: email,
                             name: "Student",
-                            createdAt: new Date(),
-                            courses: {}
-                        }).then(() => {
-                            return {
-                                studentId: studentId,
-                                email: email,
-                                name: "Student",
-                                createdAt: new Date()
-                            };
-                        });
-                    }
-                });
-        }
-
-        // Admin login
-        function adminLogin() {
-            const email = prompt('Enter admin email:');
-            const password = prompt('Enter admin password:');
-            
-            if (!email || !password) return;
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .catch(error => {
-                    alert(`Admin login failed: ${error.message}`);
-                });
-        }
-
-        // Logout
-        function logout() {
-            auth.signOut();
-        }
-
-        // Load courses from Firestore
-        function loadCourses() {
-            db.collection("courses").get().then(querySnapshot => {
-                appState.courses = {};
-                const courseList = document.getElementById('courseList');
-                
-                if (courseList) {
-                    courseList.innerHTML = '';
+                            createdAt: new Date()
+                        };
+                    });
                 }
+            });
+    }
 
-                if (querySnapshot.empty) {
-                    if (courseList) {
-                        courseList.innerHTML = `
-                            <div class="empty-state">
-                                <p>No courses available yet</p>
-                                ${appState.currentUser && appState.currentUser.email.includes('admin') ? 
-                                    '<p>Click "Add Course" to create your first course</p>' : 
-                                    '<p>Please check back later or contact your instructor</p>'}
-                            </div>
-                        `;
-                    }
+    // Setup password management
+    function setupPasswordHandlers() {
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const currentPassword = document.getElementById('currentPassword');
+        const newPassword = document.getElementById('newPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const passwordMessage = document.getElementById('passwordMessage');
+        
+        if (changePasswordBtn) {
+            changePasswordBtn.addEventListener('click', function() {
+                // Validate inputs
+                if (!currentPassword.value || !newPassword.value || !confirmPassword.value) {
+                    showPasswordMessage('Please fill in all fields', 'error');
                     return;
                 }
                 
-                querySnapshot.forEach(doc => {
-                    const courseData = doc.data();
-                    appState.courses[doc.id] = {id: doc.id, ...courseData};
-                    
-                    if (courseList) {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `
-                            <h3>${courseData.name}</h3>
-                            <p>${courseData.weeks} weeks</p>
-                            <button class="btn" data-course-id="${doc.id}">View Course</button>
-                        `;
-                        courseList.appendChild(card);
-                        
-                        card.querySelector('button').addEventListener('click', (e) => {
-                            const courseId = e.target.getAttribute('data-course-id');
-                            showCourseView(courseId);
-                        });
-                    }
-                    
-                    // Populate admin response dropdown
-                    const responseCourseSelect = document.getElementById('responseCourse');
-                    if (responseCourseSelect) {
-                        const option = document.createElement('option');
-                        option.value = doc.id;
-                        option.textContent = courseData.name;
-                        responseCourseSelect.appendChild(option);
-                    }
-                });
-            }).catch(error => {
-                console.error("Error loading courses: ", error);
-                const courseList = document.getElementById('courseList');
+                if (newPassword.value !== confirmPassword.value) {
+                    showPasswordMessage('New passwords do not match', 'error');
+                    return;
+                }
+                
+                if (newPassword.value.length < 6) {
+                    showPasswordMessage('Password must be at least 6 characters', 'error');
+                    return;
+                }
+                
+                // Reauthenticate and update password
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    appState.currentUser.email, 
+                    currentPassword.value
+                );
+                
+                appState.currentUser.reauthenticateWithCredential(credential)
+                    .then(() => {
+                        return appState.currentUser.updatePassword(newPassword.value);
+                    })
+                    .then(() => {
+                        showPasswordMessage('Password changed successfully!', 'success');
+                        // Clear form
+                        currentPassword.value = '';
+                        newPassword.value = '';
+                        confirmPassword.value = '';
+                    })
+                    .catch(error => {
+                        console.error("Error changing password: ", error);
+                        showPasswordMessage('Error: ' + error.message, 'error');
+                    });
+            });
+        }
+    }
+    
+    // Show password messages
+    function showPasswordMessage(message, type) {
+        const passwordMessage = document.getElementById('passwordMessage');
+        if (!passwordMessage) return;
+        
+        passwordMessage.textContent = message;
+        passwordMessage.className = 'password-message';
+        passwordMessage.classList.add(`password-${type}`);
+        passwordMessage.style.display = 'block';
+        
+        // Hide message after 5 seconds
+        setTimeout(() => {
+            passwordMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    // Admin login
+    function adminLogin() {
+        const email = prompt('Enter admin email:');
+        const password = prompt('Enter admin password:');
+        
+        if (!email || !password) return;
+        
+        auth.signInWithEmailAndPassword(email, password)
+            .catch(error => {
+                alert(`Admin login failed: ${error.message}`);
+            });
+    }
+
+    // Logout
+    function logout() {
+        auth.signOut();
+    }
+
+    // Load courses from Firestore
+    function loadCourses() {
+        db.collection("courses").get().then(querySnapshot => {
+            appState.courses = {};
+            const courseList = document.getElementById('courseList');
+            
+            if (courseList) {
+                courseList.innerHTML = '';
+            }
+
+            if (querySnapshot.empty) {
                 if (courseList) {
                     courseList.innerHTML = `
                         <div class="empty-state">
-                            <p>Error loading courses</p>
-                            <p>Please try again later</p>
+                            <p>No courses available yet</p>
+                            ${appState.currentUser && appState.currentUser.email.includes('admin') ? 
+                                '<p>Click "Add Course" to create your first course</p>' : 
+                                '<p>Please check back later or contact your instructor</p>'}
                         </div>
                     `;
                 }
-            });
-        }
-
-        // Load students for admin
-        function loadStudents() {
-            db.collection("students").get().then(querySnapshot => {
-                const studentList = document.getElementById('studentList');
-                if (!studentList) return;
-                
-                studentList.innerHTML = '';
-                
-                if (querySnapshot.empty) {
-                    studentList.innerHTML = '<p>No students found</p>';
-                    return;
-                }
-                
-                querySnapshot.forEach(doc => {
-                    const student = doc.data();
-                    const card = document.createElement('div');
-                    card.className = 'student-card';
-                    card.innerHTML = `
-                        <h3>${student.name}</h3>
-                        <p><strong>ID:</strong> ${student.studentId}</p>
-                        <p><strong>Email:</strong> ${student.email}</p>
-                        <p><strong>Created:</strong> ${student.createdAt?.toDate().toLocaleDateString() || 'N/A'}</p>
-                    `;
-                    studentList.appendChild(card);
-                });
-            }).catch(error => {
-                console.error("Error loading students: ", error);
-                const studentList = document.getElementById('studentList');
-                if (studentList) {
-                    studentList.innerHTML = '<p>Error loading student data</p>';
-                }
-            });
-        }
-
-        // Show course view with weeks
-        function showCourseView(courseId) {
-            appState.currentCourse = courseId;
-            const course = appState.courses[courseId];
-            
-            if (!course) return;
-            
-            document.getElementById('courseTitle').textContent = course.name;
-            const weekList = document.getElementById('weekList');
-            if (!weekList) return;
-            
-            weekList.innerHTML = '';
-            
-            for (let week = 1; week <= course.weeks; week++) {
-                const weekCard = document.createElement('div');
-                weekCard.className = 'week-card';
-                weekCard.innerHTML = `
-                    <div class="week-header">
-                        <h3>Week ${week}</h3>
-                        <div class="week-actions">
-                            <button class="btn" data-week="${week}">Begin Quiz</button>
-                            <button class="btn btn-secondary" data-week="${week}">Get Stats</button>
-                        </div>
-                    </div>
-                `;
-                weekList.appendChild(weekCard);
-                
-                // Add event listeners to buttons
-                weekCard.querySelector('[data-week]').addEventListener('click', (e) => {
-                    const weekNum = parseInt(e.target.getAttribute('data-week'));
-                    startQuiz(courseId, weekNum);
-                });
-                
-                weekCard.querySelector('.btn-secondary').addEventListener('click', (e) => {
-                    const weekNum = parseInt(e.target.getAttribute('data-week'));
-                    showStats(courseId, weekNum);
-                });
-            }
-            
-            showView('course');
-        }
-
-        // Start quiz for a specific week
-        function startQuiz(courseId, week) {
-            appState.currentWeek = week;
-            document.getElementById('quizTitle').textContent = `Week ${week} Quiz - ${appState.courses[courseId].name}`;
-            
-            // Reset timer
-            appState.quizTimeLeft = 600;
-            updateTimerDisplay();
-            
-            // Start timer
-            clearInterval(appState.quizTimer);
-            appState.quizTimer = setInterval(() => {
-                appState.quizTimeLeft--;
-                updateTimerDisplay();
-                
-                if (appState.quizTimeLeft <= 0) {
-                    clearInterval(appState.quizTimer);
-                    submitQuiz();
-                }
-            }, 1000);
-            
-            // Load quiz questions
-            loadQuizQuestions();
-            
-            showView('quiz');
-        }
-
-        // Load quiz questions
-        function loadQuizQuestions() {
-            const quizForm = document.getElementById('quizForm');
-            if (!quizForm) return;
-            
-            quizForm.innerHTML = '';
-            
-            // Generate 10 sample questions
-            for (let i = 1; i <= 10; i++) {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'quiz-question';
-                questionDiv.innerHTML = `
-                    <p>${i}. This is question ${i} for week ${appState.currentWeek}?</p>
-                    <label class="option-line">
-                        <input type="radio" name="q${i}" value="A" required> Option A
-                    </label>
-                    <label class="option-line">
-                        <input type="radio" name="q${i}" value="B"> Option B
-                    </label>
-                    <label class="option-line">
-                        <input type="radio" name="q${i}" value="C"> Option C
-                    </label>
-                    <label class="option-line">
-                        <input type="radio" name="q${i}" value="D"> Option D
-                    </label>
-                `;
-                quizForm.appendChild(questionDiv);
-            }
-            
-            // Reset progress bar
-            document.getElementById('quizProgress').style.width = '0%';
-            document.getElementById('questionCounter').textContent = 'Question 1 of 10';
-            
-            // Add event listeners to radio buttons to track progress
-            const radioButtons = document.querySelectorAll('#quizForm input[type="radio"]');
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', updateQuizProgress);
-            });
-        }
-
-        // Update quiz progress bar
-        function updateQuizProgress() {
-            const answered = document.querySelectorAll('#quizForm input[type="radio"]:checked').length;
-            const progress = (answered / 10) * 100;
-            document.getElementById('quizProgress').style.width = `${progress}%`;
-            document.getElementById('questionCounter').textContent = `Question ${answered+1} of 10`;
-        }
-
-        // Update timer display
-        function updateTimerDisplay() {
-            const minutes = Math.floor(appState.quizTimeLeft / 60);
-            const seconds = appState.quizTimeLeft % 60;
-            document.getElementById('quizTimer').textContent = 
-                `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
-        // Submit quiz
-        function submitQuiz() {
-            clearInterval(appState.quizTimer);
-            
-            // Calculate score
-            let score = 0;
-            for (let i = 1; i <= 10; i++) {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                if (selected) {
-                    // For demo, assume 70% correct
-                    if (Math.random() > 0.3) score++;
-                }
-            }
-            
-            // Save score to Firestore
-            const studentId = appState.currentStudent.studentId;
-            const quizData = {
-                courseId: appState.currentCourse,
-                week: appState.currentWeek,
-                studentId: studentId,
-                score: score,
-                timestamp: new Date(),
-                studentName: appState.currentStudent.name
-            };
-            
-            db.collection("quizResults").add(quizData)
-                .then(() => {
-                    alert(`Quiz submitted! Your score: ${score}/10`);
-                    showCourseView(appState.currentCourse);
-                })
-                .catch(error => {
-                    console.error("Error saving quiz result: ", error);
-                    alert("Error submitting quiz. Please try again.");
-                });
-        }
-
-        // Show statistics for a week
-        function showStats(courseId, week) {
-            appState.currentWeek = week;
-            document.getElementById('statsTitle').textContent = 
-                `Week ${week} Statistics - ${appState.courses[courseId].name}`;
-            
-            // Get quiz results for this week
-            db.collection("quizResults")
-                .where("courseId", "==", courseId)
-                .where("week", "==", week)
-                .get()
-                .then(querySnapshot => {
-                    const scores = [];
-                    querySnapshot.forEach(doc => {
-                        scores.push(doc.data().score);
-                    });
-                    
-                    if (scores.length === 0) {
-                        document.getElementById('avgScore').textContent = 'N/A';
-                        document.getElementById('maxScore').textContent = 'N/A';
-                        document.getElementById('minScore').textContent = 'N/A';
-                        document.getElementById('modeScore').textContent = 'N/A';
-                        return;
-                    }
-                    
-                    // Calculate statistics
-                    const sum = scores.reduce((a, b) => a + b, 0);
-                    const avg = sum / scores.length;
-                    const max = Math.max(...scores);
-                    const min = Math.min(...scores);
-                    
-                    // Calculate mode
-                    const frequency = {};
-                    let maxFreq = 0;
-                    let mode = scores[0];
-                    
-                    scores.forEach(score => {
-                        frequency[score] = (frequency[score] || 0) + 1;
-                        if (frequency[score] > maxFreq) {
-                            maxFreq = frequency[score];
-                            mode = score;
-                        }
-                    });
-                    
-                    // Update UI
-                    document.getElementById('avgScore').textContent = avg.toFixed(1);
-                    document.getElementById('maxScore').textContent = max;
-                    document.getElementById('minScore').textContent = min;
-                    document.getElementById('modeScore').textContent = mode;
-                })
-                .catch(error => {
-                    console.error("Error loading stats: ", error);
-                    document.getElementById('avgScore').textContent = 'Error';
-                    document.getElementById('maxScore').textContent = 'Error';
-                    document.getElementById('minScore').textContent = 'Error';
-                    document.getElementById('modeScore').textContent = 'Error';
-                });
-            
-            showView('stats');
-        }
-
-        // Show add course form
-        function showAddCourseForm() {
-            document.getElementById('addCourseForm').classList.remove('hidden');
-            document.getElementById('viewStudentsPanel').classList.add('hidden');
-            document.getElementById('viewResponsesPanel').classList.add('hidden');
-        }
-
-        // Show view students
-        function showViewStudents() {
-            document.getElementById('viewStudentsPanel').classList.remove('hidden');
-            document.getElementById('addCourseForm').classList.add('hidden');
-            document.getElementById('viewResponsesPanel').classList.add('hidden');
-            loadStudents();
-        }
-
-        // Show view responses
-        function showViewResponses() {
-            document.getElementById('viewResponsesPanel').classList.remove('hidden');
-            document.getElementById('addCourseForm').classList.add('hidden');
-            document.getElementById('viewStudentsPanel').classList.add('hidden');
-            loadResponseData();
-        }
-
-        // Save new course
-        function saveCourse() {
-            const courseName = document.getElementById('courseName').value;
-            const weeks = parseInt(document.getElementById('courseWeeks').value);
-            
-            if (!courseName || weeks <= 0) {
-                alert('Please enter valid course information');
                 return;
             }
             
-            const courseData = {
-                name: courseName,
-                weeks: weeks,
-                createdAt: new Date(),
-                weeksData: Array.from({length: weeks}, (_, i) => ({
-                    weekNumber: i + 1,
-                    quiz: {},
-                    stats: {}
-                }))
-            };
+            querySnapshot.forEach(doc => {
+                const courseData = doc.data();
+                appState.courses[doc.id] = {id: doc.id, ...courseData};
+                
+                if (courseList) {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${courseData.name}</h3>
+                        <p>${courseData.weeks} weeks</p>
+                        <button class="btn" data-course-id="${doc.id}">View Course</button>
+                    `;
+                    courseList.appendChild(card);
+                    
+                    card.querySelector('button').addEventListener('click', (e) => {
+                        const courseId = e.target.getAttribute('data-course-id');
+                        showCourseView(courseId);
+                    });
+                }
+                
+                // Populate admin response dropdown
+                const responseCourseSelect = document.getElementById('responseCourse');
+                if (responseCourseSelect) {
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = courseData.name;
+                    responseCourseSelect.appendChild(option);
+                }
+            });
+        }).catch(error => {
+            console.error("Error loading courses: ", error);
+            const courseList = document.getElementById('courseList');
+            if (courseList) {
+                courseList.innerHTML = `
+                    <div class="empty-state">
+                        <p>Error loading courses</p>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    // Load students for admin
+    function loadStudents() {
+        db.collection("students").get().then(querySnapshot => {
+            const studentList = document.getElementById('studentList');
+            if (!studentList) return;
             
-            db.collection("courses").add(courseData)
-            .then(docRef => {
-                alert(`Course "${courseName}" added successfully!`);
-                document.getElementById('courseName').value = '';
-                document.getElementById('courseWeeks').value = '13';
-                loadCourses();
-            })
-            .catch(error => {
-                console.error("Error adding course: ", error);
-                alert("Error adding course. Please try again.");
+            studentList.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+                studentList.innerHTML = '<p>No students found</p>';
+                return;
+            }
+            
+            querySnapshot.forEach(doc => {
+                const student = doc.data();
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.innerHTML = `
+                    <h3>${student.name}</h3>
+                    <p><strong>ID:</strong> ${student.studentId}</p>
+                    <p><strong>Email:</strong> ${student.email}</p>
+                    <p><strong>Created:</strong> ${student.createdAt?.toDate().toLocaleDateString() || 'N/A'}</p>
+                `;
+                studentList.appendChild(card);
+            });
+        }).catch(error => {
+            console.error("Error loading students: ", error);
+            const studentList = document.getElementById('studentList');
+            if (studentList) {
+                studentList.innerHTML = '<p>Error loading student data</p>';
+            }
+        });
+    }
+
+    // Show course view with weeks
+    function showCourseView(courseId) {
+        appState.currentCourse = courseId;
+        const course = appState.courses[courseId];
+        
+        if (!course) return;
+        
+        document.getElementById('courseTitle').textContent = course.name;
+        const weekList = document.getElementById('weekList');
+        if (!weekList) return;
+        
+        weekList.innerHTML = '';
+        
+        for (let week = 1; week <= course.weeks; week++) {
+            const weekCard = document.createElement('div');
+            weekCard.className = 'week-card';
+            weekCard.innerHTML = `
+                <div class="week-header">
+                    <h3>Week ${week}</h3>
+                    <div class="week-actions">
+                        <button class="btn" data-week="${week}">Begin Quiz</button>
+                        <button class="btn btn-secondary" data-week="${week}">Get Stats</button>
+                    </div>
+                </div>
+            `;
+            weekList.appendChild(weekCard);
+            
+            // Add event listeners to buttons
+            weekCard.querySelector('[data-week]').addEventListener('click', (e) => {
+                const weekNum = parseInt(e.target.getAttribute('data-week'));
+                startQuiz(courseId, weekNum);
+            });
+            
+            weekCard.querySelector('.btn-secondary').addEventListener('click', (e) => {
+                const weekNum = parseInt(e.target.getAttribute('data-week'));
+                showStats(courseId, weekNum);
             });
         }
+        
+        showView('course');
+    }
 
-        // Load response data for admin
-        function loadResponseData() {
-            const courseId = document.getElementById('responseCourse').value;
-            const responseData = document.getElementById('responseData');
-            if (!responseData) return;
+    // Start quiz for a specific week
+    function startQuiz(courseId, week) {
+        appState.currentWeek = week;
+        document.getElementById('quizTitle').textContent = `Week ${week} Quiz - ${appState.courses[courseId].name}`;
+        
+        // Reset timer
+        appState.quizTimeLeft = 600;
+        updateTimerDisplay();
+        
+        // Start timer
+        clearInterval(appState.quizTimer);
+        appState.quizTimer = setInterval(() => {
+            appState.quizTimeLeft--;
+            updateTimerDisplay();
             
-            responseData.innerHTML = '<p>Loading data...</p>';
-            
-            if (!courseId) return;
-            
-            // Get all weeks for this course
-            const course = appState.courses[courseId];
-            if (!course) return;
-            
-            const weeks = course.weeks;
-            
-            // Get quiz results for this course
-            db.collection("quizResults")
-                .where("courseId", "==", courseId)
-                .get()
-                .then(querySnapshot => {
-                    // Organize data by student and week
-                    const studentData = {};
+            if (appState.quizTimeLeft <= 0) {
+                clearInterval(appState.quizTimer);
+                submitQuiz();
+            }
+        }, 1000);
+        
+        // Load quiz questions
+        loadQuizQuestions();
+        
+        showView('quiz');
+    }
+
+    // Load quiz questions
+    function loadQuizQuestions() {
+        const quizForm = document.getElementById('quizForm');
+        if (!quizForm) return;
+        
+        quizForm.innerHTML = '';
+        
+        // Generate 10 sample questions
+        for (let i = 1; i <= 10; i++) {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'quiz-question';
+            questionDiv.innerHTML = `
+                <p>${i}. This is question ${i} for week ${appState.currentWeek}?</p>
+                <label class="option-line">
+                    <input type="radio" name="q${i}" value="A" required> Option A
+                </label>
+                <label class="option-line">
+                    <input type="radio" name="q${i}" value="B"> Option B
+                </label>
+                <label class="option-line">
+                    <input type="radio" name="q${i}" value="C"> Option C
+                </label>
+                <label class="option-line">
+                    <input type="radio" name="q${i}" value="D"> Option D
+                </label>
+            `;
+            quizForm.appendChild(questionDiv);
+        }
+        
+        // Reset progress bar
+        document.getElementById('quizProgress').style.width = '0%';
+        document.getElementById('questionCounter').textContent = 'Question 1 of 10';
+        
+        // Add event listeners to radio buttons to track progress
+        const radioButtons = document.querySelectorAll('#quizForm input[type="radio"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updateQuizProgress);
+        });
+    }
+
+    // Update quiz progress bar
+    function updateQuizProgress() {
+        const answered = document.querySelectorAll('#quizForm input[type="radio"]:checked').length;
+        const progress = (answered / 10) * 100;
+        document.getElementById('quizProgress').style.width = `${progress}%`;
+        document.getElementById('questionCounter').textContent = `Question ${answered+1} of 10`;
+    }
+
+    // Update timer display
+    function updateTimerDisplay() {
+        const minutes = Math.floor(appState.quizTimeLeft / 60);
+        const seconds = appState.quizTimeLeft % 60;
+        document.getElementById('quizTimer').textContent = 
+            `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    // Submit quiz
+    function submitQuiz() {
+        clearInterval(appState.quizTimer);
+        
+        // Calculate score
+        let score = 0;
+        for (let i = 1; i <= 10; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selected) {
+                // For demo, assume 70% correct
+                if (Math.random() > 0.3) score++;
+            }
+        }
+        
+        // Save score to Firestore
+        const studentId = appState.currentStudent.studentId;
+        const quizData = {
+            courseId: appState.currentCourse,
+            week: appState.currentWeek,
+            studentId: studentId,
+            score: score,
+            timestamp: new Date(),
+            studentName: appState.currentStudent.name
+        };
+        
+        db.collection("quizResults").add(quizData)
+            .then(() => {
+                alert(`Quiz submitted! Your score: ${score}/10`);
+                showCourseView(appState.currentCourse);
+            })
+            .catch(error => {
+                console.error("Error saving quiz result: ", error);
+                alert("Error submitting quiz. Please try again.");
+            });
+    }
+
+    // Show statistics for a week
+    function showStats(courseId, week) {
+        appState.currentWeek = week;
+        document.getElementById('statsTitle').textContent = 
+            `Week ${week} Statistics - ${appState.courses[courseId].name}`;
+        
+        // Get quiz results for this week
+        db.collection("quizResults")
+            .where("courseId", "==", courseId)
+            .where("week", "==", week)
+            .get()
+            .then(querySnapshot => {
+                const scores = [];
+                querySnapshot.forEach(doc => {
+                    scores.push(doc.data().score);
+                });
+                
+                if (scores.length === 0) {
+                    document.getElementById('avgScore').textContent = 'N/A';
+                    document.getElementById('maxScore').textContent = 'N/A';
+                    document.getElementById('minScore').textContent = 'N/A';
+                    document.getElementById('modeScore').textContent = 'N/A';
+                    return;
+                }
+                
+                // Calculate statistics
+                const sum = scores.reduce((a, b) => a + b, 0);
+                const avg = sum / scores.length;
+                const max = Math.max(...scores);
+                const min = Math.min(...scores);
+                
+                // Calculate mode
+                const frequency = {};
+                let maxFreq = 0;
+                let mode = scores[0];
+                
+                scores.forEach(score => {
+                    frequency[score] = (frequency[score] || 0) + 1;
+                    if (frequency[score] > maxFreq) {
+                        maxFreq = frequency[score];
+                        mode = score;
+                    }
+                });
+                
+                // Update UI
+                document.getElementById('avgScore').textContent = avg.toFixed(1);
+                document.getElementById('maxScore').textContent = max;
+                document.getElementById('minScore').textContent = min;
+                document.getElementById('modeScore').textContent = mode;
+            })
+            .catch(error => {
+                console.error("Error loading stats: ", error);
+                document.getElementById('avgScore').textContent = 'Error';
+                document.getElementById('maxScore').textContent = 'Error';
+                document.getElementById('minScore').textContent = 'Error';
+                document.getElementById('modeScore').textContent = 'Error';
+            });
+        
+        showView('stats');
+    }
+
+    // Show add course form
+    function showAddCourseForm() {
+        document.getElementById('addCourseForm').classList.remove('hidden');
+        document.getElementById('viewStudentsPanel').classList.add('hidden');
+        document.getElementById('viewResponsesPanel').classList.add('hidden');
+    }
+
+    // Show view students
+    function showViewStudents() {
+        document.getElementById('viewStudentsPanel').classList.remove('hidden');
+        document.getElementById('addCourseForm').classList.add('hidden');
+        document.getElementById('viewResponsesPanel').classList.add('hidden');
+        loadStudents();
+    }
+
+    // Show view responses
+    function showViewResponses() {
+        document.getElementById('viewResponsesPanel').classList.remove('hidden');
+        document.getElementById('addCourseForm').classList.add('hidden');
+        document.getElementById('viewStudentsPanel').classList.add('hidden');
+        loadResponseData();
+    }
+
+    // Save new course
+    function saveCourse() {
+        const courseName = document.getElementById('courseName').value;
+        const weeks = parseInt(document.getElementById('courseWeeks').value);
+        
+        if (!courseName || weeks <= 0) {
+            alert('Please enter valid course information');
+            return;
+        }
+        
+        const courseData = {
+            name: courseName,
+            weeks: weeks,
+            createdAt: new Date(),
+            weeksData: Array.from({length: weeks}, (_, i) => ({
+                weekNumber: i + 1,
+                quiz: {},
+                stats: {}
+            }))
+        };
+        
+        db.collection("courses").add(courseData)
+        .then(docRef => {
+            alert(`Course "${courseName}" added successfully!`);
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseWeeks').value = '13';
+            loadCourses();
+        })
+        .catch(error => {
+            console.error("Error adding course: ", error);
+            alert("Error adding course. Please try again.");
+        });
+    }
+
+    // Load response data for admin
+    function loadResponseData() {
+        const courseId = document.getElementById('responseCourse').value;
+        const responseData = document.getElementById('responseData');
+        if (!responseData) return;
+        
+        responseData.innerHTML = '<p>Loading data...</p>';
+        
+        if (!courseId) return;
+        
+        // Get all weeks for this course
+        const course = appState.courses[courseId];
+        if (!course) return;
+        
+        const weeks = course.weeks;
+        
+        // Get quiz results for this course
+        db.collection("quizResults")
+            .where("courseId", "==", courseId)
+            .get()
+            .then(querySnapshot => {
+                // Organize data by student and week
+                const studentData = {};
+                
+                querySnapshot.forEach(doc => {
+                    const result = doc.data();
+                    const studentId = result.studentId;
                     
-                    querySnapshot.forEach(doc => {
-                        const result = doc.data();
-                        const studentId = result.studentId;
-                        
-                        if (!studentData[studentId]) {
-                            studentData[studentId] = {
-                                name: result.studentName || studentId,
-                                scores: Array(weeks).fill(null)
-                            };
-                        }
-                        
-                        studentData[studentId].scores[result.week - 1] = result.score;
-                    });
-                    
-                    // Display data
-                    let html = `
-                        <h4>Student Performance</h4>
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
-                                <thead>
-                                    <tr>
-                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Student</th>
-                                        ${Array.from({length: weeks}, (_, i) => 
-                                            `<th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Week ${i+1}</th>`
-                                        ).join('')}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-                    
-                    for (const studentId in studentData) {
-                        const student = studentData[studentId];
-                        html += `
-                            <tr>
-                                <td style="border: 1px solid #ddd; padding: 8px;">${student.name}</td>
-                                ${student.scores.map(score => 
-                                    `<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">
-                                        ${score !== null ? score : '-'}
-                                    </td>`
-                                ).join('')}
-                            </tr>
-                        `;
+                    if (!studentData[studentId]) {
+                        studentData[studentId] = {
+                            name: result.studentName || studentId,
+                            scores: Array(weeks).fill(null)
+                        };
                     }
                     
-                    html += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                    
-                    responseData.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error("Error loading response data: ", error);
-                    responseData.innerHTML = '<p>Error loading data. Please try again.</p>';
+                    studentData[studentId].scores[result.week - 1] = result.score;
                 });
-        }
+                
+                // Display data
+                let html = `
+                    <h4>Student Performance</h4>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Student</th>
+                                    ${Array.from({length: weeks}, (_, i) => 
+                                        `<th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Week ${i+1}</th>`
+                                    ).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                for (const studentId in studentData) {
+                    const student = studentData[studentId];
+                    html += `
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${student.name}</td>
+                            ${student.scores.map(score => 
+                                `<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">
+                                    ${score !== null ? score : '-'}
+                                </td>`
+                            ).join('')}
+                        </tr>
+                    `;
+                }
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                responseData.innerHTML = html;
+            })
+            .catch(error => {
+                console.error("Error loading response data: ", error);
+                responseData.innerHTML = '<p>Error loading data. Please try again.</p>';
+            });
+    }
 
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+    // Initialize the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initApp);
+</script>
 </body>
 </html>
