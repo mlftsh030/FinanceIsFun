@@ -566,7 +566,143 @@
                     }
                 });
         }
+         // Initialize Firestore and create collections if they don't exist
+    function initializeFirestore() {
+        const collections = ['courses', 'students', 'quizResults'];
+        
+        collections.forEach(collection => {
+            db.collection(collection).get().then(snapshot => {
+                if (snapshot.empty) {
+                    // Create a dummy document to initialize the collection
+                    db.collection(collection).doc('init').set({
+                        initialized: true,
+                        timestamp: new Date()
+                    });
+                }
+            });
+        });
+    }
 
+    // Initialize the app
+    function initApp() {
+        initializeFirestore(); // ADD THIS LINE
+        
+        // ... rest of the initApp code ...
+    }
+
+    // Create student profile (UPDATED)
+    function createStudentProfile(studentId, email) {
+        db.collection("students").doc(studentId).set({
+            studentId: studentId,
+            email: email,
+            name: "New Student",
+            createdAt: new Date(),
+            courses: {}  // Initialize empty courses object
+        })
+        .then(() => {
+            console.log(`Student profile created for ${studentId}`);
+        })
+        .catch(error => {
+            console.error("Error creating student profile: ", error);
+        });
+    }
+
+    // Save new course (UPDATED)
+    function saveCourse() {
+        const courseName = document.getElementById('courseName').value;
+        const weeks = parseInt(document.getElementById('courseWeeks').value);
+        
+        if (!courseName || weeks <= 0) {
+            alert('Please enter valid course information');
+            return;
+        }
+        
+        // Create a proper course document structure
+        const courseData = {
+            name: courseName,
+            weeks: weeks,
+            createdAt: new Date(),
+            // Initialize weeks structure
+            weeksData: Array.from({length: weeks}, (_, i) => ({
+                weekNumber: i + 1,
+                quiz: {},
+                stats: {}
+            }))
+        };
+        
+        db.collection("courses").add(courseData)
+        .then(docRef => {
+            alert(`Course "${courseName}" added successfully! ID: ${docRef.id}`);
+            document.getElementById('courseName').value = '';
+            loadCourses();
+        })
+        .catch(error => {
+            console.error("Error adding course: ", error);
+            alert("Error adding course. Please try again.");
+        });
+    }
+
+    // Load courses from Firestore (UPDATED)
+    function loadCourses() {
+        console.log("Loading courses...");
+        db.collection("courses").get().then(querySnapshot => {
+            console.log(`Found ${querySnapshot.size} courses`);
+            
+            appState.courses = {};
+            const courseList = document.getElementById('courseList');
+            
+            if (!courseList) {
+                console.log("Course list element not found");
+                return;
+            }
+            
+            courseList.innerHTML = '';
+
+            if (querySnapshot.empty) {
+                courseList.innerHTML = `
+                    <div class="empty-state">
+                        <p>No courses available yet</p>
+                        ${appState.currentUser && appState.currentUser.email.includes('admin') ? 
+                            '<p>Click "Add Course" to create your first course</p>' : 
+                            '<p>Please check back later or contact your instructor</p>'}
+                    </div>
+                `;
+                return;
+            }
+            
+            querySnapshot.forEach(doc => {
+                const courseData = doc.data();
+                appState.courses[doc.id] = {id: doc.id, ...courseData};
+                
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${courseData.name}</h3>
+                    <p>${courseData.weeks} weeks</p>
+                    <button class="btn" data-course-id="${doc.id}">View Course</button>
+                `;
+                courseList.appendChild(card);
+                
+                card.querySelector('button').addEventListener('click', (e) => {
+                    const courseId = e.target.getAttribute('data-course-id');
+                    showCourseView(courseId);
+                });
+            });
+        }).catch(error => {
+            console.error("Error loading courses: ", error);
+            const courseList = document.getElementById('courseList');
+            if (courseList) {
+                courseList.innerHTML = `
+                    <div class="empty-state">
+                        <p>Error loading courses</p>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    // ... rest of the code ...
         // Create student profile
         function createStudentProfile(studentId, email) {
             db.collection("students").doc(studentId).set({
