@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Management Quiz</title>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <title>Time Value of Money Quiz</title>
     <style>
         * {
             margin: 0;
@@ -16,7 +13,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
@@ -64,9 +61,7 @@
             line-height: 1.6;
         }
         
-        input[type="text"], 
-        input[type="email"], 
-        input[type="password"] {
+        input[type="text"] {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
@@ -202,28 +197,41 @@
             margin-top: 10px;
         }
         
-        .welcome-back {
-            text-align: center;
-            padding: 20px;
-            background: #e3f2fd;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #1a2a6c;
-        }
-        
-        .welcome-back h3 {
-            color: #1a2a6c;
-            margin-bottom: 15px;
-        }
-        
         .formula {
-            font-family: 'Courier New', Courier, monospace;
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
-            border-left: 3px solid #1a2a6c;
-            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            border: 1px dashed #1a2a6c;
+        }
+        
+        .calculator-notation {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .calculator-notation table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .calculator-notation th, .calculator-notation td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .key-concept {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
         }
         
         @media (max-width: 600px) {
@@ -248,41 +256,24 @@
 <body>
     <div class="container" id="app">
         <div class="header-section">
-            <h2>📊 Financial Management Quiz</h2>
-            <p>Sources of Finance & Cost of Capital | Week 2</p>
+            <h2>⏱️ Time Value of Money - Module 2 Quiz</h2>
+            <p>University of Cape Town | Department of Finance and Tax</p>
         </div>
         
         <div class="module-info">
             <h4>Module Topics Covered:</h4>
-            <p>Equity vs Debt • Ordinary & Preference Shares • Bonds & Debentures • WACC • CAPM • Dividend Discount Model</p>
+            <p>Present Value • Future Value • Compounding • Discounting • Annuities • Perpetuities • Effective Annual Rate</p>
         </div>
         
         <div id="welcomeSection">
-            <div class="welcome-back">
-                <h3>👋 Welcome to the Finance Quiz!</h3>
-                <p>Enter your name below to get started with this week's quiz on Sources of Finance and Cost of Capital.</p>
-            </div>
-            <input type="text" id="introName" placeholder="Enter your full name" required />
-            <button onclick="greetUser()">Begin Quiz</button>
-        </div>
-
-        <div id="greetingSection" style="display:none;">
-            <h3 id="greetingMsg"></h3>
-            <p>This quiz covers key concepts from Week 2: Sources of Finance and Cost of Capital.</p>
-            <div class="module-info">
-                <p>Topics include:</p>
-                <ul>
-                    <li>Equity vs Debt financing</li>
-                    <li>Ordinary and preference shares</li>
-                    <li>Cost of capital calculations</li>
-                    <li>WACC and its applications</li>
-                </ul>
-            </div>
-            <button onclick="showQuizSection()">Start Quiz Now</button>
+            <h3>👋 Welcome to the Time Value of Money Quiz!</h3>
+            <p>Enter your name below to get started. This quiz will test your understanding of Module 2 concepts.</p>
+            <input type="text" id="introName" placeholder="What's your name?" required />
+            <button onclick="startQuiz()">Begin Quiz</button>
         </div>
 
         <div id="quizSection" style="display:none;">
-            <h3>📘 Week 2: Sources of Finance & Cost of Capital</h3>
+            <h3>📘 Module 2: Time Value of Money Concepts</h3>
             <div class="progress-bar">
                 <div class="progress" id="quizProgress"></div>
             </div>
@@ -290,145 +281,165 @@
             
             <form id="quizForm">
                 <div class="quiz-question">
-                    <p>1. Which of the following is a key advantage of debt financing over equity financing?</p>
-                    <label class="option-line">A. No repayment obligations <input type="radio" name="q1" value="A" required /></label>
-                    <label class="option-line">B. Interest payments are tax-deductible <input type="radio" name="q1" value="B" /></label>
-                    <label class="option-line">C. No impact on ownership control <input type="radio" name="q1" value="C" /></label>
+                    <p>1. What is the fundamental concept behind the time value of money?</p>
+                    <label class="option-line">A) Money today is worth more than the same amount in the future <input type="radio" name="q1" value="A" required /></label>
+                    <label class="option-line">B) Money in the future is worth more than money today <input type="radio" name="q1" value="B" /></label>
+                    <label class="option-line">C) The value of money remains constant over time <input type="radio" name="q1" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>2. What is the main difference between ordinary shares and preference shares?</p>
-                    <label class="option-line">A. Ordinary shares pay fixed dividends <input type="radio" name="q2" value="A" required /></label>
-                    <label class="option-line">B. Preference shareholders have priority in dividend payments <input type="radio" name="q2" value="B" /></label>
-                    <label class="option-line">C. Ordinary shares are always redeemable <input type="radio" name="q2" value="C" /></label>
+                    <p>2. Which three factors determine the difference in value between money today and money in the future?</p>
+                    <label class="option-line">A) Inflation, opportunity cost, and risk <input type="radio" name="q2" value="A" required /></label>
+                    <label class="option-line">B) Currency, location, and time <input type="radio" name="q2" value="B" /></label>
+                    <label class="option-line">C) Interest rates, taxes, and fees <input type="radio" name="q2" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>3. In the context of cost of capital, what does WACC stand for?</p>
-                    <label class="option-line">A. Weighted Average Cost of Capital <input type="radio" name="q3" value="A" required /></label>
-                    <label class="option-line">B. Weighted Average Capital Cost <input type="radio" name="q3" value="B" /></label>
-                    <label class="option-line">C. Working Asset Capital Calculation <input type="radio" name="q3" value="C" /></label>
+                    <p>3. What is the formula for calculating future value?</p>
+                    <div class="formula">FV = PV × (1 + r)<sup>t</sup></div>
+                    <label class="option-line">A) FV = PV × (1 + r)<sup>t</sup> <input type="radio" name="q3" value="A" required /></label>
+                    <label class="option-line">B) FV = PV × r × t <input type="radio" name="q3" value="B" /></label>
+                    <label class="option-line">C) FV = PV / (1 + r)<sup>t</sup> <input type="radio" name="q3" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>4. Which source of finance is typically the most expensive for a company?</p>
-                    <label class="option-line">A. Bank overdraft <input type="radio" name="q4" value="A" required /></label>
-                    <label class="option-line">B. Ordinary share capital <input type="radio" name="q4" value="B" /></label>
-                    <label class="option-line">C. Debentures <input type="radio" name="q4" value="C" /></label>
+                    <p>4. What is compound interest?</p>
+                    <label class="option-line">A) Interest earned only on the principal amount <input type="radio" name="q4" value="A" required /></label>
+                    <label class="option-line">B) Interest earned on both principal and previously earned interest <input type="radio" name="q4" value="B" /></label>
+                    <label class="option-line">C) Interest calculated using simple formulas <input type="radio" name="q4" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>5. What is a key benefit of listing shares on a stock exchange?</p>
-                    <label class="option-line">A. Guaranteed dividend payments <input type="radio" name="q5" value="A" required /></label>
-                    <label class="option-line">B. Enhanced ability to raise new capital <input type="radio" name="q5" value="B" /></label>
-                    <label class="option-line">C. Reduced regulatory requirements <input type="radio" name="q5" value="C" /></label>
+                    <p>5. What is the present value of R10,000 to be received in 5 years at a discount rate of 8%?</p>
+                    <div class="calculator-notation">
+                        <table>
+                            <tr><th>Enter:</th><th>Press:</th></tr>
+                            <tr><td>10000</td><td>FV</td></tr>
+                            <tr><td>8</td><td>I/Y</td></tr>
+                            <tr><td>5</td><td>N</td></tr>
+                            <tr><td></td><td>PV</td></tr>
+                        </table>
+                    </div>
+                    <label class="option-line">A) R6,810.17 <input type="radio" name="q5" value="A" required /></label>
+                    <label class="option-line">B) R6,209.21 <input type="radio" name="q5" value="B" /></label>
+                    <label class="option-line">C) R5,000.00 <input type="radio" name="q5" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>6. In the CAPM formula, what does β (beta) represent?</p>
-                    <label class="option-line">A. The risk-free rate of return <input type="radio" name="q6" value="A" required /></label>
-                    <label class="option-line">B. The market risk premium <input type="radio" name="q6" value="B" /></label>
-                    <label class="option-line">C. The systematic risk of the security <input type="radio" name="q6" value="C" /></label>
+                    <p>6. What is the difference between Annual Percentage Rate (APR) and Effective Annual Rate (EAR)?</p>
+                    <label class="option-line">A) APR doesn't consider compounding, while EAR does <input type="radio" name="q6" value="A" required /></label>
+                    <label class="option-line">B) APR is always higher than EAR <input type="radio" name="q6" value="B" /></label>
+                    <label class="option-line">C) APR is for investments, EAR is for loans <input type="radio" name="q6" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>7. Which of the following is considered a short-term source of finance?</p>
-                    <label class="option-line">A. Mortgage bonds <input type="radio" name="q7" value="A" required /></label>
-                    <label class="option-line">B. Trade creditors <input type="radio" name="q7" value="B" /></label>
-                    <label class="option-line">C. Preference shares <input type="radio" name="q7" value="C" /></label>
+                    <p>7. Calculate the EAR for 12% APR compounded quarterly.</p>
+                    <div class="formula">EAR = (1 + APR/m)<sup>m</sup> - 1</div>
+                    <label class="option-line">A) 12.00% <input type="radio" name="q7" value="A" required /></label>
+                    <label class="option-line">B) 12.55% <input type="radio" name="q7" value="B" /></label>
+                    <label class="option-line">C) 13.00% <input type="radio" name="q7" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>8. What is the primary reason that debt financing is generally cheaper than equity financing?</p>
-                    <label class="option-line">A. Debt has no maturity date <input type="radio" name="q8" value="A" required /></label>
-                    <label class="option-line">B. Interest payments are tax-deductible <input type="radio" name="q8" value="B" /></label>
-                    <label class="option-line">C. Debt holders have voting rights <input type="radio" name="q8" value="C" /></label>
+                    <p>8. What is an annuity?</p>
+                    <label class="option-line">A) A single lump sum investment <input type="radio" name="q8" value="A" required /></label>
+                    <label class="option-line">B) A series of equal cash flows at regular intervals <input type="radio" name="q8" value="B" /></label>
+                    <label class="option-line">C) An investment with variable returns <input type="radio" name="q8" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>9. Which formula represents the Dividend Discount Model?</p>
-                    <div class="formula">k<sub>e</sub> = [D<sub>0</sub>(1 + g)/P<sub>0</sub>] + g</div>
-                    <label class="option-line">A. Cost of debt formula <input type="radio" name="q9" value="A" required /></label>
-                    <label class="option-line">B. Cost of preference shares formula <input type="radio" name="q9" value="B" /></label>
-                    <label class="option-line">C. Cost of ordinary shares formula <input type="radio" name="q9" value="C" /></label>
+                    <p>9. What is the key difference between an ordinary annuity and an annuity due?</p>
+                    <label class="option-line">A) Ordinary annuity payments are at the end of the period, annuity due at the beginning <input type="radio" name="q9" value="A" required /></label>
+                    <label class="option-line">B) Ordinary annuity has higher returns <input type="radio" name="q9" value="B" /></label>
+                    <label class="option-line">C) Annuity due is only for retirement planning <input type="radio" name="q9" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>10. What is a key difference between debentures and ordinary shares?</p>
-                    <label class="option-line">A. Debentures represent ownership in the company <input type="radio" name="q10" value="A" required /></label>
-                    <label class="option-line">B. Debenture holders are creditors, not owners <input type="radio" name="q10" value="B" /></label>
-                    <label class="option-line">C. Ordinary shares have fixed dividend payments <input type="radio" name="q10" value="C" /></label>
+                    <p>10. What is a perpetuity?</p>
+                    <label class="option-line">A) An investment with a fixed term <input type="radio" name="q10" value="A" required /></label>
+                    <label class="option-line">B) An annuity that continues forever <input type="radio" name="q10" value="B" /></label>
+                    <label class="option-line">C) A high-risk investment <input type="radio" name="q10" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>11. In WACC calculations, why do we use after-tax cost of debt?</p>
-                    <label class="option-line">A. Because dividends are tax-deductible <input type="radio" name="q11" value="A" required /></label>
-                    <label class="option-line">B. Because interest payments are tax-deductible <input type="radio" name="q11" value="B" /></label>
-                    <label class="option-line">C. Because share issues reduce tax liability <input type="radio" name="q11" value="C" /></label>
+                    <p>11. What is the present value of a perpetuity that pays R1,000 per year with a discount rate of 5%?</p>
+                    <div class="formula">PV = C / r</div>
+                    <label class="option-line">A) R10,000 <input type="radio" name="q11" value="A" required /></label>
+                    <label class="option-line">B) R20,000 <input type="radio" name="q11" value="B" /></label>
+                    <label class="option-line">C) R25,000 <input type="radio" name="q11" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>12. What is the primary purpose of calculating WACC?</p>
-                    <label class="option-line">A. To determine dividend payout ratios <input type="radio" name="q12" value="A" required /></label>
-                    <label class="option-line">B. To evaluate potential investment projects <input type="radio" name="q12" value="B" /></label>
-                    <label class="option-line">C. To calculate employee compensation <input type="radio" name="q12" value="C" /></label>
+                    <p>12. How does more frequent compounding affect the effective interest rate?</p>
+                    <label class="option-line">A) Increases the effective rate <input type="radio" name="q12" value="A" required /></label>
+                    <label class="option-line">B) Decreases the effective rate <input type="radio" name="q12" value="B" /></label>
+                    <label class="option-line">C) Has no effect on the effective rate <input type="radio" name="q12" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>13. Which of the following is a characteristic of preference shares?</p>
-                    <label class="option-line">A. They always carry voting rights <input type="radio" name="q13" value="A" required /></label>
-                    <label class="option-line">B. They have priority over ordinary shares for dividends <input type="radio" name="q13" value="B" /></label>
-                    <label class="option-line">C. Their dividends are tax-deductible <input type="radio" name="q13" value="C" /></label>
+                    <p>13. If you need R100,000 in 10 years and can earn 8% annually, how much must you invest today?</p>
+                    <div class="calculator-notation">
+                        <table>
+                            <tr><th>Enter:</th><th>Press:</th></tr>
+                            <tr><td>100000</td><td>FV</td></tr>
+                            <tr><td>8</td><td>I/Y</td></tr>
+                            <tr><td>10</td><td>N</td></tr>
+                            <tr><td></td><td>PV</td></tr>
+                        </table>
+                    </div>
+                    <label class="option-line">A) R46,319.35 <input type="radio" name="q13" value="A" required /></label>
+                    <label class="option-line">B) R50,000.00 <input type="radio" name="q13" value="B" /></label>
+                    <label class="option-line">C) R55,000.00 <input type="radio" name="q13" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>14. What is the main advantage of trade credit as a short-term financing option?</p>
-                    <label class="option-line">A. It typically has no interest cost <input type="radio" name="q14" value="A" required /></label>
-                    <label class="option-line">B. It improves the company's credit rating <input type="radio" name="q14" value="B" /></label>
-                    <label class="option-line">C. It doesn't affect working capital <input type="radio" name="q14" value="C" /></label>
+                    <p>14. What is the future value of R5,000 invested for 7 years at 6% compounded annually?</p>
+                    <label class="option-line">A) R7,518.15 <input type="radio" name="q14" value="A" required /></label>
+                    <label class="option-line">B) R7,000.00 <input type="radio" name="q14" value="B" /></label>
+                    <label class="option-line">C) R8,000.00 <input type="radio" name="q14" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>15. What does the CAPM formula calculate?</p>
-                    <div class="formula">k<sub>e</sub> = r<sub>f</sub> + β(r<sub>m</sub> - r<sub>f</sub>)</div>
-                    <label class="option-line">A. Cost of debt <input type="radio" name="q15" value="A" required /></label>
-                    <label class="option-line">B. Cost of ordinary shares <input type="radio" name="q15" value="B" /></label>
-                    <label class="option-line">C. Cost of preference shares <input type="radio" name="q15" value="C" /></label>
+                    <p>15. How long will it take for an investment to double at 7% annual interest?</p>
+                    <div class="key-concept">Rule of 72: 72 / interest rate ≈ years to double</div>
+                    <label class="option-line">A) About 7 years <input type="radio" name="q15" value="A" required /></label>
+                    <label class="option-line">B) About 10 years <input type="radio" name="q15" value="B" /></label>
+                    <label class="option-line">C) About 14 years <input type="radio" name="q15" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>16. Why might a company choose sale and leaseback as a financing option?</p>
-                    <label class="option-line">A. To remove assets from the balance sheet <input type="radio" name="q16" value="A" required /></label>
-                    <label class="option-line">B. To raise capital while retaining asset use <input type="radio" name="q16" value="B" /></label>
-                    <label class="option-line">C. To reduce dividend payments <input type="radio" name="q16" value="C" /></label>
+                    <p>16. What is the discount factor?</p>
+                    <label class="option-line">A) The factor used to calculate present value from future value <input type="radio" name="q16" value="A" required /></label>
+                    <label class="option-line">B) The interest rate on loans <input type="radio" name="q16" value="B" /></label>
+                    <label class="option-line">C) A reduction in investment fees <input type="radio" name="q16" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>17. What is a key consideration in determining a company's optimal capital structure?</p>
-                    <label class="option-line">A. Maximizing the use of expensive equity financing <input type="radio" name="q17" value="A" required /></label>
-                    <label class="option-line">B. Balancing tax benefits of debt with financial risk <input type="radio" name="q17" value="B" /></label>
-                    <label class="option-line">C. Minimizing the use of all external financing <input type="radio" name="q17" value="C" /></label>
+                    <p>17. Why does money have time value?</p>
+                    <label class="option-line">A) Due to inflation, opportunity cost, and risk <input type="radio" name="q17" value="A" required /></label>
+                    <label class="option-line">B) Because banks charge interest <input type="radio" name="q17" value="B" /></label>
+                    <label class="option-line">C) Because money grows over time <input type="radio" name="q17" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>18. How should a company use WACC in investment decisions?</p>
-                    <label class="option-line">A. As the maximum acceptable return rate <input type="radio" name="q18" value="A" required /></label>
-                    <label class="option-line">B. As the minimum acceptable return rate <input type="radio" name="q18" value="B" /></label>
-                    <label class="option-line">C. As a secondary consideration after payback period <input type="radio" name="q18" value="C" /></label>
+                    <p>18. What is the key difference between simple and compound interest?</p>
+                    <label class="option-line">A) Compound interest earns interest on previous interest <input type="radio" name="q18" value="A" required /></label>
+                    <label class="option-line">B) Simple interest is calculated annually <input type="radio" name="q18" value="B" /></label>
+                    <label class="option-line">C) Compound interest is only for long-term investments <input type="radio" name="q18" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>19. What is a characteristic of cumulative preference shares?</p>
-                    <label class="option-line">A. Dividends accumulate if not paid when due <input type="radio" name="q19" value="A" required /></label>
-                    <label class="option-line">B. They convert to ordinary shares automatically <input type="radio" name="q19" value="B" /></label>
-                    <label class="option-line">C. They have variable dividend rates <input type="radio" name="q19" value="C" /></label>
+                    <p>19. Which would you prefer as a borrower?</p>
+                    <label class="option-line">A) A loan with less frequent compounding <input type="radio" name="q19" value="A" required /></label>
+                    <label class="option-line">B) A loan with more frequent compounding <input type="radio" name="q19" value="B" /></label>
+                    <label class="option-line">C) The compounding frequency doesn't matter <input type="radio" name="q19" value="C" /></label>
                 </div>
 
                 <div class="quiz-question">
-                    <p>20. Why is the cost of retained earnings considered similar to the cost of ordinary shares?</p>
-                    <label class="option-line">A. Because both are tax-deductible <input type="radio" name="q20" value="A" required /></label>
-                    <label class="option-line">B. Because both represent equity financing <input type="radio" name="q20" value="B" /></label>
-                    <label class="option-line">C. Because both have fixed return rates <input type="radio" name="q20" value="C" /></label>
+                    <p>20. What is the present value of R15,000 to be received in 3 years at 9% discount rate?</p>
+                    <label class="option-line">A) R11,582.75 <input type="radio" name="q20" value="A" required /></label>
+                    <label class="option-line">B) R12,000.00 <input type="radio" name="q20" value="B" /></label>
+                    <label class="option-line">C) R10,000.00 <input type="radio" name="q20" value="C" /></label>
                 </div>
                 
                 <button type="button" onclick="submitQuiz()">Submit Quiz</button>
@@ -442,67 +453,36 @@
             <p>Review the module materials to strengthen your understanding of any challenging concepts.</p>
             <button onclick="location.reload()">Take Again</button>
         </div>
-
-        <div id="loginSection" style="display:none;">
-            <h3>👨‍🏫 Tutor Login</h3>
-            <input type="email" id="email" placeholder="Tutor Email" required />
-            <input type="password" id="password" placeholder="Password" required />
-            <label>
-                <input type="checkbox" onclick="togglePassword()" /> Show Password
-            </label>
-            <button onclick="loginTutor()">Login as Tutor</button>
-        </div>
-
-        <div id="adminPanel" style="display:none;">
-            <h3>👨‍🏫 Student Results</h3>
-            <div id="studentList"></div>
-            <button onclick="location.reload()">Back to Quiz</button>
-        </div>
     </div>
 
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBM0etPzV4XkPfBcLBUjQ5G3JZB428qyF8",
-            authDomain: "financeisfun-78594.firebaseapp.com",
-            projectId: "financeisfun-78594",
-            storageBucket: "financeisfun-78594.appspot.com",
-            messagingSenderId: "249768918465",
-            appId: "1:249768918465:web:5b9048caf1059848bfc340"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
         // Store correct answers
         const correctAnswers = {
-            q1: 'B',
-            q2: 'B',
+            q1: 'A',
+            q2: 'A',
             q3: 'A',
             q4: 'B',
             q5: 'B',
-            q6: 'C',
+            q6: 'A',
             q7: 'B',
             q8: 'B',
-            q9: 'C',
+            q9: 'A',
             q10: 'B',
             q11: 'B',
-            q12: 'B',
-            q13: 'B',
+            q12: 'A',
+            q13: 'A',
             q14: 'A',
             q15: 'B',
-            q16: 'B',
-            q17: 'B',
-            q18: 'B',
+            q16: 'A',
+            q17: 'A',
+            q18: 'A',
             q19: 'A',
-            q20: 'B'
+            q20: 'A'
         };
         
         let userName = '';
         
-        function greetUser() {
+        function startQuiz() {
             const nameInput = document.getElementById('introName');
             if (nameInput.value.trim() === '') {
                 alert('Please enter your name to continue.');
@@ -510,13 +490,7 @@
             }
             
             userName = nameInput.value.trim();
-            document.getElementById('greetingMsg').textContent = `Welcome back, ${userName}! Ready for this week's quiz?`;
             document.getElementById('welcomeSection').style.display = 'none';
-            document.getElementById('greetingSection').style.display = 'block';
-        }
-        
-        function showQuizSection() {
-            document.getElementById('greetingSection').style.display = 'none';
             document.getElementById('quizSection').style.display = 'block';
             updateProgressBar();
         }
@@ -597,99 +571,15 @@
                 input.disabled = true;
             });
             
-            // Save student data
-            const studentData = {
-                name: userName,
-                score: score,
-                percentage: percentage,
-                timestamp: new Date()
-            };
-            
-            db.collection("students").add(studentData)
-                .then(() => {
-                    // Change submit button to show thank you
-                    const submitBtn = form.querySelector('button');
-                    submitBtn.textContent = 'View Results';
-                    submitBtn.onclick = function() {
-                        document.getElementById('quizSection').style.display = 'none';
-                        document.getElementById('thankYou').style.display = 'block';
-                        document.getElementById('finalScore').textContent = `Final Score: ${score}/20 (${percentage}%)`;
-                    };
-                })
-                .catch(error => {
-                    console.error("Error saving student data: ", error);
-                    alert("There was an error saving your results. Please try again.");
-                });
-        }
-        
-        function togglePassword() {
-            const pw = document.getElementById("password");
-            pw.type = pw.type === "password" ? "text" : "password";
-        }
-        
-        function loginTutor() {
-            const email = document.getElementById("email").value;
-            const pass = document.getElementById("password").value;
-
-            if (!email || !pass) {
-                alert("Please enter both email and password.");
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => {
-                    document.getElementById('loginSection').style.display = 'none';
-                    showAdminPanel();
-                })
-                .catch(err => alert("Login failed: " + err.message));
-        }
-        
-        function showAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'block';
-            const list = document.getElementById('studentList');
-            list.innerHTML = '';
-
-            db.collection("students").orderBy("timestamp", "desc").get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        list.innerHTML = '<p>No student submissions yet.</p>';
-                        return;
-                    }
-
-                    snapshot.forEach(doc => {
-                        const s = doc.data();
-                        const card = document.createElement('div');
-                        card.className = 'student-card';
-                        card.innerHTML = `
-                            <strong>${s.name}</strong>
-                            <p>📅 Submitted: ${s.timestamp.toDate().toLocaleString()}</p>
-                            <p>✅ Quiz Score: ${s.score}/20 (${s.percentage}%)</p>
-                        `;
-                        list.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    console.error("Error getting student data: ", error);
-                    list.innerHTML = '<p>Error loading student data. Please try again later.</p>';
-                });
-        }
-        
-        // Check if user is tutor
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('welcomeSection').style.display = 'none';
-                document.getElementById('greetingSection').style.display = 'none';
+            // Change submit button to show thank you
+            const submitBtn = form.querySelector('button');
+            submitBtn.textContent = 'View Results';
+            submitBtn.onclick = function() {
                 document.getElementById('quizSection').style.display = 'none';
-                document.getElementById('thankYou').style.display = 'none';
-                document.getElementById('loginSection').style.display = 'none';
-                showAdminPanel();
-            } else {
-                // Show login section only if not a student taking the quiz
-                if (!userName) {
-                    document.getElementById('loginSection').style.display = 'block';
-                }
-            }
-        });
+                document.getElementById('thankYou').style.display = 'block';
+                document.getElementById('finalScore').textContent = `Final Score: ${score}/20 (${percentage}%)`;
+            };
+        }
     </script>
 </body>
 </html>
