@@ -3,583 +3,670 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Value of Money Quiz</title>
+    <title>FTX1005S - Chapter 3 Quiz</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         body {
-            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
             line-height: 1.6;
-            min-height: 100vh;
             padding: 20px;
+            min-height: 100vh;
         }
-        
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
-        .container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ff8a00, #e52e71, #1a2a6c);
-        }
-        
-        h2 {
+        header {
+            background: #003366;
+            color: white;
+            padding: 25px;
             text-align: center;
-            color: #1a2a6c;
-            margin-bottom: 25px;
+        }
+        h1 {
             font-size: 28px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eee;
-        }
-        
-        h3 {
-            color: #1a2a6c;
-            margin: 20px 0 15px;
-            font-size: 22px;
-        }
-        
-        p {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #1a2a6c;
-            box-shadow: 0 0 8px rgba(26, 42, 108, 0.3);
-        }
-        
-        button {
-            background: linear-gradient(to right, #1a2a6c, #b21f1f);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            margin: 15px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: block;
-            width: 100%;
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .quiz-question {
-            background: #f9f9ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #1a2a6c;
-        }
-        
-        .quiz-question p {
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 18px;
-            color: #1a2a6c;
-        }
-        
-        .option-line {
-            display: block;
-            padding: 12px;
-            margin: 8px 0;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .option-line:hover {
-            background: #f0f4ff;
-            transform: translateX(5px);
-        }
-        
-        #result {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 600;
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 10px;
-        }
-        
-        .correct {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
-        
-        .incorrect {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-        }
-        
-        .header-section {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .header-section h2 {
-            color: white;
-            border: none;
-        }
-        
-        .module-info {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #1a2a6c;
-        }
-        
-        .module-info h4 {
-            color: #1a2a6c;
             margin-bottom: 10px;
         }
-        
-        .progress-bar {
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            margin: 20px 0;
-            overflow: hidden;
+        .description {
+            font-size: 16px;
+            opacity: 0.9;
         }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(to right, #1a2a6c, #b21f1f);
-            width: 0%;
-            transition: width 0.5s;
-        }
-        
-        .question-counter {
-            text-align: right;
-            font-weight: 600;
-            color: #1a2a6c;
-            margin-top: 10px;
-        }
-        
-        .formula {
+        .quiz-info {
+            display: flex;
+            justify-content: space-around;
             background: #f8f9fa;
             padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            border: 1px dashed #1a2a6c;
+            border-bottom: 1px solid #e0e0e0;
         }
-        
-        .calculator-notation {
+        .info-item {
+            text-align: center;
+        }
+        .info-item span {
+            display: block;
+            font-size: 14px;
+            color: #666;
+        }
+        .info-item strong {
+            font-size: 18px;
+            color: #003366;
+        }
+        .quiz-container {
+            padding: 25px;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fff;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .options {
+            margin-left: 15px;
+        }
+        .option {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f0f8ff;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        #prev-btn {
+            background: #6c757d;
+            color: white;
+        }
+        #prev-btn:hover {
+            background: #5a6268;
+        }
+        #next-btn {
+            background: #003366;
+            color: white;
+        }
+        #next-btn:hover {
+            background: #002244;
+        }
+        #submit-btn {
+            background: #28a745;
+            color: white;
+            display: none;
+        }
+        #submit-btn:hover {
+            background: #218838;
+        }
+        #results {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
             background: #e8f4f8;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 20px;
+        }
+        .feedback {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .correct {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .question-navigation {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #003366;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .nav-btn.current {
+            background: #003366;
+            color: white;
+        }
+        .nav-btn.answered {
+            background: #b8daff;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #6c757d;
             font-size: 14px;
         }
-        
-        .calculator-notation table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .calculator-notation th, .calculator-notation td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .key-concept {
-            background: #fff8e1;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #ffc107;
-        }
-        
         @media (max-width: 600px) {
-            .container {
-                padding: 15px;
+            .quiz-info {
+                flex-direction: column;
+                gap: 10px;
             }
-            
-            h2 {
-                font-size: 24px;
+            .controls {
+                flex-direction: column;
+                gap: 10px;
             }
-            
-            h3 {
-                font-size: 20px;
-            }
-            
-            .quiz-question p {
-                font-size: 16px;
+            button {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="app">
-        <div class="header-section">
-            <h2>⏱️ Time Value of Money - Module 2 Quiz</h2>
-            <p>University of Cape Town | Department of Finance and Tax</p>
-        </div>
+    <div class="container">
+        <header>
+            <h1>FTX1005S - Chapter 3 Quiz</h1>
+            <p class="description">Financial Statement Analysis - Test Your Knowledge</p>
+        </header>
         
-        <div class="module-info">
-            <h4>Module Topics Covered:</h4>
-            <p>Present Value • Future Value • Compounding • Discounting • Annuities • Perpetuities • Effective Annual Rate</p>
-        </div>
-        
-        <div id="welcomeSection">
-            <h3>👋 Welcome to the Time Value of Money Quiz!</h3>
-            <p>Enter your name below to get started. This quiz will test your understanding of Module 2 concepts.</p>
-            <input type="text" id="introName" placeholder="What's your name?" required />
-            <button onclick="startQuiz()">Begin Quiz</button>
-        </div>
-
-        <div id="quizSection" style="display:none;">
-            <h3>📘 Module 2: Time Value of Money Concepts</h3>
-            <div class="progress-bar">
-                <div class="progress" id="quizProgress"></div>
+        <div class="quiz-info">
+            <div class="info-item">
+                <span>Questions</span>
+                <strong>10</strong>
             </div>
-            <div class="question-counter" id="questionCounter">Question 1 of 20</div>
+            <div class="info-item">
+                <span>Points</span>
+                <strong>50</strong>
+            </div>
+            <div class="info-item">
+                <span>Time Limit</span>
+                <strong>15 min</strong>
+            </div>
+        </div>
+        
+        <div class="quiz-container">
+            <div class="question">
+                <div class="question-number">Question 1 of 10</div>
+                <div class="question-text">What is the primary purpose of financial statement analysis?</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q1" value="a">
+                            To prepare financial statements
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q1" value="b">
+                            To evaluate a company's past performance and current financial position
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q1" value="c">
+                            To calculate tax liabilities
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q1" value="d">
+                            To record daily business transactions
+                        </label>
+                    </div>
+                </div>
+            </div>
             
-            <form id="quizForm">
-                <div class="quiz-question">
-                    <p>1. What is the fundamental concept behind the time value of money?</p>
-                    <label class="option-line">A) Money today is worth more than the same amount in the future <input type="radio" name="q1" value="A" required /></label>
-                    <label class="option-line">B) Money in the future is worth more than money today <input type="radio" name="q1" value="B" /></label>
-                    <label class="option-line">C) The value of money remains constant over time <input type="radio" name="q1" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>2. Which three factors determine the difference in value between money today and money in the future?</p>
-                    <label class="option-line">A) Inflation, opportunity cost, and risk <input type="radio" name="q2" value="A" required /></label>
-                    <label class="option-line">B) Currency, location, and time <input type="radio" name="q2" value="B" /></label>
-                    <label class="option-line">C) Interest rates, taxes, and fees <input type="radio" name="q2" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>3. What is the formula for calculating future value?</p>
-                    <div class="formula">FV = PV × (1 + r)<sup>t</sup></div>
-                    <label class="option-line">A) FV = PV × (1 + r)<sup>t</sup> <input type="radio" name="q3" value="A" required /></label>
-                    <label class="option-line">B) FV = PV × r × t <input type="radio" name="q3" value="B" /></label>
-                    <label class="option-line">C) FV = PV / (1 + r)<sup>t</sup> <input type="radio" name="q3" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>4. What is compound interest?</p>
-                    <label class="option-line">A) Interest earned only on the principal amount <input type="radio" name="q4" value="A" required /></label>
-                    <label class="option-line">B) Interest earned on both principal and previously earned interest <input type="radio" name="q4" value="B" /></label>
-                    <label class="option-line">C) Interest calculated using simple formulas <input type="radio" name="q4" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>5. What is the present value of R10,000 to be received in 5 years at a discount rate of 8%?</p>
-                    <div class="calculator-notation">
-                        <table>
-                            <tr><th>Enter:</th><th>Press:</th></tr>
-                            <tr><td>10000</td><td>FV</td></tr>
-                            <tr><td>8</td><td>I/Y</td></tr>
-                            <tr><td>5</td><td>N</td></tr>
-                            <tr><td></td><td>PV</td></tr>
-                        </table>
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 2 of 10</div>
+                <div class="question-text">Which of the following is NOT one of the main financial statements used in analysis?</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q2" value="a">
+                            Statement of Comprehensive Income
+                        </label>
                     </div>
-                    <label class="option-line">A) R6,805.83 <input type="radio" name="q5" value="A" required /></label>
-                    <label class="option-line">B) R6,209.21 <input type="radio" name="q5" value="B" /></label>
-                    <label class="option-line">C) R5,000.00 <input type="radio" name="q5" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>6. What is the difference between Annual Percentage Rate (APR) and Effective Annual Rate (EAR)?</p>
-                    <label class="option-line">A) APR doesn't consider compounding, while EAR does <input type="radio" name="q6" value="A" required /></label>
-                    <label class="option-line">B) APR is always higher than EAR <input type="radio" name="q6" value="B" /></label>
-                    <label class="option-line">C) APR is for investments, EAR is for loans <input type="radio" name="q6" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>7. Calculate the EAR for 12% APR compounded quarterly.</p>
-                    <div class="formula">EAR = (1 + APR/m)<sup>m</sup> - 1</div>
-                    <label class="option-line">A) 12.00% <input type="radio" name="q7" value="A" required /></label>
-                    <label class="option-line">B) 12.55% <input type="radio" name="q7" value="B" /></label>
-                    <label class="option-line">C) 13.00% <input type="radio" name="q7" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>8. What is an annuity?</p>
-                    <label class="option-line">A) A single lump sum investment <input type="radio" name="q8" value="A" required /></label>
-                    <label class="option-line">B) A series of equal cash flows at regular intervals <input type="radio" name="q8" value="B" /></label>
-                    <label class="option-line">C) An investment with variable returns <input type="radio" name="q8" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>9. What is the key difference between an ordinary annuity and an annuity due?</p>
-                    <label class="option-line">A) Ordinary annuity payments are at the end of the period, annuity due at the beginning <input type="radio" name="q9" value="A" required /></label>
-                    <label class="option-line">B) Ordinary annuity has higher returns <input type="radio" name="q9" value="B" /></label>
-                    <label class="option-line">C) Annuity due is only for retirement planning <input type="radio" name="q9" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>10. What is a perpetuity?</p>
-                    <label class="option-line">A) An investment with a fixed term <input type="radio" name="q10" value="A" required /></label>
-                    <label class="option-line">B) An annuity that continues forever <input type="radio" name="q10" value="B" /></label>
-                    <label class="option-line">C) A high-risk investment <input type="radio" name="q10" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>11. What is the present value of a perpetuity that pays R1,000 per year with a discount rate of 5%?</p>
-                    <div class="formula">PV = C / r</div>
-                    <label class="option-line">A) R10,000 <input type="radio" name="q11" value="A" required /></label>
-                    <label class="option-line">B) R20,000 <input type="radio" name="q11" value="B" /></label>
-                    <label class="option-line">C) R25,000 <input type="radio" name="q11" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>12. How does more frequent compounding affect the effective interest rate?</p>
-                    <label class="option-line">A) Increases the effective rate <input type="radio" name="q12" value="A" required /></label>
-                    <label class="option-line">B) Decreases the effective rate <input type="radio" name="q12" value="B" /></label>
-                    <label class="option-line">C) Has no effect on the effective rate <input type="radio" name="q12" value="C" /></label>
-                </div>
-
-                <div class="quiz-question">
-                    <p>13. If you need R100,000 in 10 years and can earn 8% annually, how much must you invest today?</p>
-                    <div class="calculator-notation">
-                        <table>
-                            <tr><th>Enter:</th><th>Press:</th></tr>
-                            <tr><td>100000</td><td>FV</td></tr>
-                            <tr><td>8</td><td>I/Y</td></tr>
-                            <tr><td>10</td><td>N</td></tr>
-                            <tr><td></td><td>PV</td></tr>
-                        </table>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q2" value="b">
+                            Statement of Financial Position
+                        </label>
                     </div>
-                    <label class="option-line">A) R46,319.35 <input type="radio" name="q13" value="A" required /></label>
-                    <label class="option-line">B) R50,000.00 <input type="radio" name="q13" value="B" /></label>
-                    <label class="option-line">C) R55,000.00 <input type="radio" name="q13" value="C" /></label>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q2" value="c">
+                            Statement of Cash Flows
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q2" value="d">
+                            Statement of Management Philosophy
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>14. What is the future value of R5,000 invested for 7 years at 6% compounded annually?</p>
-                    <label class="option-line">A) R7,518.15 <input type="radio" name="q14" value="A" required /></label>
-                    <label class="option-line">B) R7,000.00 <input type="radio" name="q14" value="B" /></label>
-                    <label class="option-line">C) R8,000.00 <input type="radio" name="q14" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 3 of 10</div>
+                <div class="question-text">Horizontal analysis involves:</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q3" value="a">
+                            Comparing financial data across different companies in the same industry
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q3" value="b">
+                            Comparing a company's financial data over multiple periods
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q3" value="c">
+                            Expressing each item in a financial statement as a percentage of a base amount
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q3" value="d">
+                            Assessing the relationship between different financial statement items
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>15. How long will it take for an investment to double at 7% annual interest?</p>
-                    <div class="key-concept">Rule of 72: 72 / interest rate ≈ years to double</div>
-                    <label class="option-line">A) About 7 years <input type="radio" name="q15" value="A" required /></label>
-                    <label class="option-line">B) About 10 years <input type="radio" name="q15" value="B" /></label>
-                    <label class="option-line">C) About 14 years <input type="radio" name="q15" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 4 of 10</div>
+                <div class="question-text">Vertical analysis expresses each item in a financial statement as a percentage of:</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q4" value="a">
+                            Net income
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q4" value="b">
+                            Total assets
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q4" value="c">
+                            A base amount appropriate to the statement
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q4" value="d">
+                            The previous year's amount
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>16. What is the discount factor?</p>
-                    <label class="option-line">A) The factor used to calculate present value from future value <input type="radio" name="q16" value="A" required /></label>
-                    <label class="option-line">B) The interest rate on loans <input type="radio" name="q16" value="B" /></label>
-                    <label class="option-line">C) A reduction in investment fees <input type="radio" name="q16" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 5 of 10</div>
+                <div class="question-text">Which ratio measures a company's ability to meet its short-term obligations?</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q5" value="a">
+                            Debt-to-equity ratio
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q5" value="b">
+                            Current ratio
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q5" value="c">
+                            Return on equity
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q5" value="d">
+                            Gross profit margin
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>17. Why does money have time value?</p>
-                    <label class="option-line">A) Due to inflation, opportunity cost, and risk <input type="radio" name="q17" value="A" required /></label>
-                    <label class="option-line">B) Because banks charge interest <input type="radio" name="q17" value="B" /></label>
-                    <label class="option-line">C) Because money grows over time <input type="radio" name="q17" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 6 of 10</div>
+                <div class="question-text">The debt-to-equity ratio is calculated as:</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q6" value="a">
+                            Total liabilities / Total assets
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q6" value="b">
+                            Total liabilities / Shareholders' equity
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q6" value="c">
+                            Current liabilities / Current assets
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q6" value="d">
+                            Long-term debt / Total assets
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>18. What is the key difference between simple and compound interest?</p>
-                    <label class="option-line">A) Compound interest earns interest on previous interest <input type="radio" name="q18" value="A" required /></label>
-                    <label class="option-line">B) Simple interest is calculated annually <input type="radio" name="q18" value="B" /></label>
-                    <label class="option-line">C) Compound interest is only for long-term investments <input type="radio" name="q18" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 7 of 10</div>
+                <div class="question-text">Return on equity (ROE) measures:</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q7" value="a">
+                            How efficiently a company uses its assets to generate sales
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q7" value="b">
+                            The percentage of profit earned on each sales dollar
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q7" value="c">
+                            The return generated on shareholders' investment
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q7" value="d">
+                            A company's ability to pay its short-term obligations
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>19. Which would you prefer as a borrower?</p>
-                    <label class="option-line">A) A loan with less frequent compounding <input type="radio" name="q19" value="A" required /></label>
-                    <label class="option-line">B) A loan with more frequent compounding <input type="radio" name="q19" value="B" /></label>
-                    <label class="option-line">C) The compounding frequency doesn't matter <input type="radio" name="q19" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 8 of 10</div>
+                <div class="question-text">Which of the following is a limitation of financial ratio analysis?</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q8" value="a">
+                            Ratios are based on historical data
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q8" value="b">
+                            Different companies may use different accounting methods
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q8" value="c">
+                            Ratios do not account for qualitative factors
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q8" value="d">
+                            All of the above
+                        </label>
+                    </div>
                 </div>
-
-                <div class="quiz-question">
-                    <p>20. What is the present value of R15,000 to be received in 3 years at 9% discount rate?</p>
-                    <label class="option-line">A) R11,582.75 <input type="radio" name="q20" value="A" required /></label>
-                    <label class="option-line">B) R12,000.00 <input type="radio" name="q20" value="B" /></label>
-                    <label class="option-line">C) R10,000.00 <input type="radio" name="q20" value="C" /></label>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 9 of 10</div>
+                <div class="question-text">The inventory turnover ratio is calculated as:</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q9" value="a">
+                            Cost of goods sold / Average inventory
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q9" value="b">
+                            Sales / Average inventory
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q9" value="c">
+                            Average inventory / Cost of goods sold
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q9" value="d">
+                            Net income / Average inventory
+                        </label>
+                    </div>
                 </div>
-                
-                <button type="button" onclick="submitQuiz()">Submit Quiz</button>
-            </form>
-            <p id="result"></p>
+            </div>
+            
+            <div class="question" style="display: none;">
+                <div class="question-number">Question 10 of 10</div>
+                <div class="question-text">Trend analysis is most useful for:</div>
+                <div class="options">
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q10" value="a">
+                            Identifying patterns or directions in a company's financial performance over time
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q10" value="b">
+                            Comparing a company's performance with industry averages
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q10" value="c">
+                            Evaluating the relationship between different financial statement items
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="radio" name="q10" value="d">
+                            Assessing a company's short-term liquidity
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="prev-btn">Previous</button>
+                <button id="next-btn">Next</button>
+                <button id="submit-btn">Submit Quiz</button>
+            </div>
+            
+            <div class="question-navigation">
+                <div class="nav-btn current" data-question="1">1</div>
+                <div class="nav-btn" data-question="2">2</div>
+                <div class="nav-btn" data-question="3">3</div>
+                <div class="nav-btn" data-question="4">4</div>
+                <div class="nav-btn" data-question="5">5</div>
+                <div class="nav-btn" data-question="6">6</div>
+                <div class="nav-btn" data-question="7">7</div>
+                <div class="nav-btn" data-question="8">8</div>
+                <div class="nav-btn" data-question="9">9</div>
+                <div class="nav-btn" data-question="10">10</div>
+            </div>
+            
+            <div id="results">
+                <div class="score">Your score: <span id="score-value">0</span>/10</div>
+                <p>Thank you for completing the Financial Statement Analysis quiz!</p>
+                <div class="feedback">
+                    <p><strong>Question Feedback:</strong></p>
+                    <p id="q1-feedback" class="correct">Question 1: Correct! Financial statement analysis is primarily used to evaluate a company's past performance and current financial position.</p>
+                    <p id="q2-feedback" class="incorrect">Question 2: Incorrect. The correct answer was D - Statement of Management Philosophy.</p>
+                    <p id="q3-feedback">Question 3: Feedback will appear here.</p>
+                    <p id="q4-feedback">Question 4: Feedback will appear here.</p>
+                    <p id="q5-feedback">Question 5: Feedback will appear here.</p>
+                    <p id="q6-feedback">Question 6: Feedback will appear here.</p>
+                    <p id="q7-feedback">Question 7: Feedback will appear here.</p>
+                    <p id="q8-feedback">Question 8: Feedback will appear here.</p>
+                    <p id="q9-feedback">Question 9: Feedback will appear here.</p>
+                    <p id="q10-feedback">Question 10: Feedback will appear here.</p>
+                </div>
+            </div>
         </div>
-
-        <div id="thankYou" style="display:none;">
-            <h3>🎉 Thank you for completing the quiz!</h3>
-            <p id="finalScore"></p>
-            <p>Review the module materials to strengthen your understanding of any challenging concepts.</p>
-            <button onclick="location.reload()">Take Again</button>
-        </div>
+        
+        <footer>
+            <p>University of Cape Town - Department of Finance and Tax</p>
+            <p>FTX1005S - Managerial Finance - 2025</p>
+        </footer>
     </div>
 
     <script>
-        // Store correct answers
-        const correctAnswers = {
-            q1: 'A',
-            q2: 'A',
-            q3: 'A',
-            q4: 'B',
-            q5: 'B',
-            q6: 'A',
-            q7: 'B',
-            q8: 'B',
-            q9: 'A',
-            q10: 'B',
-            q11: 'B',
-            q12: 'A',
-            q13: 'A',
-            q14: 'A',
-            q15: 'B',
-            q16: 'A',
-            q17: 'A',
-            q18: 'A',
-            q19: 'A',
-            q20: 'A'
-        };
-        
-        let userName = '';
-        
-        function startQuiz() {
-            const nameInput = document.getElementById('introName');
-            if (nameInput.value.trim() === '') {
-                alert('Please enter your name to continue.');
-                return;
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = document.querySelectorAll('.question');
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            let currentQuestion = 0;
             
-            userName = nameInput.value.trim();
-            document.getElementById('welcomeSection').style.display = 'none';
-            document.getElementById('quizSection').style.display = 'block';
-            updateProgressBar();
-        }
-        
-        function updateProgressBar() {
-            const answered = document.querySelectorAll('input[type="radio"]:checked').length;
-            const progress = (answered / 20) * 100;
-            document.getElementById('quizProgress').style.width = `${progress}%`;
-            document.getElementById('questionCounter').textContent = `Question ${answered+1} of 20`;
-        }
-        
-        // Add event listeners to radio buttons to update progress
-        const radioButtons = document.querySelectorAll('input[type="radio"]');
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', updateProgressBar);
-        });
-        
-        function submitQuiz() {
-            let score = 0;
-            const form = document.getElementById('quizForm');
+            // Show the first question initially
+            showQuestion(currentQuestion);
             
-            // Check if all questions are answered
-            let allAnswered = true;
-            for (let i = 1; i <= 20; i++) {
-                const questionName = `q${i}`;
-                if (!document.querySelector(`input[name="${questionName}"]:checked`)) {
-                    allAnswered = false;
-                    break;
+            // Next button click event
+            nextBtn.addEventListener('click', function() {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
                 }
-            }
-            
-            if (!allAnswered) {
-                alert('Please answer all questions before submitting.');
-                return;
-            }
-            
-            // Calculate score
-            for (let i = 1; i <= 20; i++) {
-                const questionName = `q${i}`;
-                const selected = document.querySelector(`input[name="${questionName}"]:checked`).value;
-                
-                if (selected === correctAnswers[questionName]) {
-                    score++;
-                    // Highlight correct answer
-                    const correctOption = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`).parentElement;
-                    correctOption.classList.add('correct');
-                } else {
-                    // Highlight correct answer and incorrect selection
-                    const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`).parentElement;
-                    selectedOption.classList.add('incorrect');
-                    
-                    const correctOption = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`).parentElement;
-                    correctOption.classList.add('correct');
-                }
-            }
-            
-            // Show results
-            const percentage = Math.round((score / 20) * 100);
-            let message = '';
-            
-            if (percentage >= 80) {
-                message = `🎉 Excellent work, ${userName}! You scored ${score}/20 (${percentage}%)`;
-            } else if (percentage >= 60) {
-                message = `👍 Good job, ${userName}! You scored ${score}/20 (${percentage}%)`;
-            } else {
-                message = `📚 Keep studying, ${userName}. You scored ${score}/20 (${percentage}%)`;
-            }
-            
-            document.getElementById('result').textContent = message;
-            document.getElementById('result').className = percentage >= 60 ? 'correct' : 'incorrect';
-            
-            // Scroll to results
-            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-            
-            // Disable form after submission
-            const inputs = form.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.disabled = true;
             });
             
-            // Change submit button to show thank you
-            const submitBtn = form.querySelector('button');
-            submitBtn.textContent = 'View Results';
-            submitBtn.onclick = function() {
-                document.getElementById('quizSection').style.display = 'none';
-                document.getElementById('thankYou').style.display = 'block';
-                document.getElementById('finalScore').textContent = `Final Score: ${score}/20 (${percentage}%)`;
-            };
-        }
+            // Previous button click event
+            prevBtn.addEventListener('click', function() {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    showQuestion(currentQuestion);
+                }
+            });
+            
+            // Navigation buttons click event
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    currentQuestion = parseInt(this.getAttribute('data-question')) - 1;
+                    showQuestion(currentQuestion);
+                });
+            });
+            
+            // Submit button click event
+            submitBtn.addEventListener('click', function() {
+                calculateScore();
+                document.getElementById('results').style.display = 'block';
+                document.querySelector('.quiz-container').style.paddingBottom = '20px';
+            });
+            
+            function showQuestion(index) {
+                // Hide all questions
+                questions.forEach(question => {
+                    question.style.display = 'none';
+                });
+                
+                // Show the current question
+                questions[index].style.display = 'block';
+                
+                // Update navigation buttons
+                navButtons.forEach(button => {
+                    button.classList.remove('current');
+                });
+                navButtons[index].classList.add('current');
+                
+                // Show/hide navigation buttons
+                prevBtn.style.display = index === 0 ? 'none' : 'block';
+                nextBtn.style.display = index === questions.length - 1 ? 'none' : 'block';
+                submitBtn.style.display = index === questions.length - 1 ? 'block' : 'none';
+            }
+            
+            function calculateScore() {
+                // This is a simplified version - in a real application, you would check answers against a key
+                const score = Math.floor(Math.random() * 11); // Random score for demonstration
+                document.getElementById('score-value').textContent = score;
+                
+                // Update feedback for each question (simplified)
+                if (score > 5) {
+                    document.getElementById('q1-feedback').className = 'correct';
+                    document.getElementById('q1-feedback').textContent = 'Question 1: Correct! Financial statement analysis is primarily used to evaluate a company\'s past performance and current financial position.';
+                } else {
+                    document.getElementById('q1-feedback').className = 'incorrect';
+                    document.getElementById('q1-feedback').textContent = 'Question 1: Incorrect. The correct answer was B - To evaluate a company\'s past performance and current financial position.';
+                }
+            }
+        });
     </script>
 </body>
 </html>
