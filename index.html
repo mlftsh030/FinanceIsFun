@@ -3,670 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FTX1005S - Chapter 3 Quiz</title>
+    <title>Managerial Finance - End of Period Adjustments Quiz</title>
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
             color: #333;
             line-height: 1.6;
-            padding: 20px;
             min-height: 100vh;
+            padding: 20px;
         }
+        
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            position: relative;
             overflow: hidden;
         }
-        header {
-            background: #003366;
-            color: white;
-            padding: 25px;
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff8a00, #e52e71, #1a2a6c);
+        }
+        
+        h2 {
             text-align: center;
-        }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        .description {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        .quiz-info {
-            display: flex;
-            justify-content: space-around;
-            background: #f8f9fa;
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .info-item {
-            text-align: center;
-        }
-        .info-item span {
-            display: block;
-            font-size: 14px;
-            color: #666;
-        }
-        .info-item strong {
-            font-size: 18px;
-            color: #003366;
-        }
-        .quiz-container {
-            padding: 25px;
-        }
-        .question {
+            color: #1a2a6c;
             margin-bottom: 25px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background: #fff;
+            font-size: 28px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
         }
-        .question-number {
-            font-weight: bold;
-            color: #003366;
-            margin-bottom: 10px;
-            font-size: 18px;
+        
+        h3 {
+            color: #1a2a6c;
+            margin: 20px 0 15px;
+            font-size: 22px;
         }
-        .question-text {
-            font-size: 16px;
+        
+        p {
             margin-bottom: 15px;
-            font-weight: 500;
+            line-height: 1.6;
         }
-        .options {
-            margin-left: 15px;
-        }
-        .option {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .option:hover {
-            background-color: #f0f8ff;
-        }
-        label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        input[type="radio"] {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-        }
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
             transition: all 0.3s;
         }
-        #prev-btn {
-            background: #6c757d;
+        
+        input:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            box-shadow: 0 0 8px rgba(26, 42, 108, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
-        }
-        #prev-btn:hover {
-            background: #5a6268;
-        }
-        #next-btn {
-            background: #003366;
-            color: white;
-        }
-        #next-btn:hover {
-            background: #002244;
-        }
-        #submit-btn {
-            background: #28a745;
-            color: white;
-            display: none;
-        }
-        #submit-btn:hover {
-            background: #218838;
-        }
-        #results {
-            display: none;
-            margin-top: 30px;
-            padding: 25px;
-            background: #e8f4f8;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .score {
-            font-size: 24px;
-            font-weight: bold;
-            color: #003366;
-            margin-bottom: 20px;
-        }
-        .feedback {
-            margin-top: 20px;
-            text-align: left;
-        }
-        .correct {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .incorrect {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .question-navigation {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 20px;
-        }
-        .nav-btn {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #003366;
-            border-radius: 5px;
-            background: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 15px 0;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
         }
-        .nav-btn.current {
-            background: #003366;
-            color: white;
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        .nav-btn.answered {
-            background: #b8daff;
-        }
-        footer {
-            text-align: center;
-            margin-top: 30px;
+        
+        .quiz-question {
+            background: #f9f9ff;
+            border-radius: 10px;
             padding: 20px;
-            color: #6c757d;
-            font-size: 14px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1a2a6c;
         }
+        
+        .quiz-question p {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #1a2a6c;
+        }
+        
+        .option-line {
+            display: block;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .option-line:hover {
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+        
+        #result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .header-section {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .header-section h2 {
+            color: white;
+            border: none;
+        }
+        
+        .module-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .module-info h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .question-counter {
+            text-align: right;
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-top: 10px;
+        }
+        
+        .welcome-back {
+            text-align: center;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .welcome-back h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #1a2a6c;
+            font-size: 16px;
+        }
+        
+        .accounting-term {
+            font-weight: bold;
+            color: #1a2a6c;
+        }
+        
         @media (max-width: 600px) {
-            .quiz-info {
-                flex-direction: column;
-                gap: 10px;
+            .container {
+                padding: 15px;
             }
-            .controls {
-                flex-direction: column;
-                gap: 10px;
+            
+            h2 {
+                font-size: 24px;
             }
-            button {
-                width: 100%;
+            
+            h3 {
+                font-size: 20px;
+            }
+            
+            .quiz-question p {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>FTX1005S - Chapter 3 Quiz</h1>
-            <p class="description">Financial Statement Analysis - Test Your Knowledge</p>
-        </header>
-        
-        <div class="quiz-info">
-            <div class="info-item">
-                <span>Questions</span>
-                <strong>10</strong>
-            </div>
-            <div class="info-item">
-                <span>Points</span>
-                <strong>50</strong>
-            </div>
-            <div class="info-item">
-                <span>Time Limit</span>
-                <strong>15 min</strong>
-            </div>
+    <div class="container" id="app">
+        <div class="header-section">
+            <h2>📊 Managerial Finance Quiz</h2>
+            <p>Chapter 2: End of Period Adjustments & Annual Reports</p>
         </div>
         
-        <div class="quiz-container">
-            <div class="question">
-                <div class="question-number">Question 1 of 10</div>
-                <div class="question-text">What is the primary purpose of financial statement analysis?</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q1" value="a">
-                            To prepare financial statements
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q1" value="b">
-                            To evaluate a company's past performance and current financial position
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q1" value="c">
-                            To calculate tax liabilities
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q1" value="d">
-                            To record daily business transactions
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 2 of 10</div>
-                <div class="question-text">Which of the following is NOT one of the main financial statements used in analysis?</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q2" value="a">
-                            Statement of Comprehensive Income
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q2" value="b">
-                            Statement of Financial Position
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q2" value="c">
-                            Statement of Cash Flows
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q2" value="d">
-                            Statement of Management Philosophy
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 3 of 10</div>
-                <div class="question-text">Horizontal analysis involves:</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q3" value="a">
-                            Comparing financial data across different companies in the same industry
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q3" value="b">
-                            Comparing a company's financial data over multiple periods
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q3" value="c">
-                            Expressing each item in a financial statement as a percentage of a base amount
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q3" value="d">
-                            Assessing the relationship between different financial statement items
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 4 of 10</div>
-                <div class="question-text">Vertical analysis expresses each item in a financial statement as a percentage of:</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q4" value="a">
-                            Net income
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q4" value="b">
-                            Total assets
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q4" value="c">
-                            A base amount appropriate to the statement
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q4" value="d">
-                            The previous year's amount
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 5 of 10</div>
-                <div class="question-text">Which ratio measures a company's ability to meet its short-term obligations?</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q5" value="a">
-                            Debt-to-equity ratio
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q5" value="b">
-                            Current ratio
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q5" value="c">
-                            Return on equity
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q5" value="d">
-                            Gross profit margin
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 6 of 10</div>
-                <div class="question-text">The debt-to-equity ratio is calculated as:</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q6" value="a">
-                            Total liabilities / Total assets
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q6" value="b">
-                            Total liabilities / Shareholders' equity
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q6" value="c">
-                            Current liabilities / Current assets
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q6" value="d">
-                            Long-term debt / Total assets
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 7 of 10</div>
-                <div class="question-text">Return on equity (ROE) measures:</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q7" value="a">
-                            How efficiently a company uses its assets to generate sales
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q7" value="b">
-                            The percentage of profit earned on each sales dollar
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q7" value="c">
-                            The return generated on shareholders' investment
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q7" value="d">
-                            A company's ability to pay its short-term obligations
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 8 of 10</div>
-                <div class="question-text">Which of the following is a limitation of financial ratio analysis?</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q8" value="a">
-                            Ratios are based on historical data
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q8" value="b">
-                            Different companies may use different accounting methods
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q8" value="c">
-                            Ratios do not account for qualitative factors
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q8" value="d">
-                            All of the above
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 9 of 10</div>
-                <div class="question-text">The inventory turnover ratio is calculated as:</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q9" value="a">
-                            Cost of goods sold / Average inventory
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q9" value="b">
-                            Sales / Average inventory
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q9" value="c">
-                            Average inventory / Cost of goods sold
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q9" value="d">
-                            Net income / Average inventory
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="question" style="display: none;">
-                <div class="question-number">Question 10 of 10</div>
-                <div class="question-text">Trend analysis is most useful for:</div>
-                <div class="options">
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q10" value="a">
-                            Identifying patterns or directions in a company's financial performance over time
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q10" value="b">
-                            Comparing a company's performance with industry averages
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q10" value="c">
-                            Evaluating the relationship between different financial statement items
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q10" value="d">
-                            Assessing a company's short-term liquidity
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="controls">
-                <button id="prev-btn">Previous</button>
-                <button id="next-btn">Next</button>
-                <button id="submit-btn">Submit Quiz</button>
-            </div>
-            
-            <div class="question-navigation">
-                <div class="nav-btn current" data-question="1">1</div>
-                <div class="nav-btn" data-question="2">2</div>
-                <div class="nav-btn" data-question="3">3</div>
-                <div class="nav-btn" data-question="4">4</div>
-                <div class="nav-btn" data-question="5">5</div>
-                <div class="nav-btn" data-question="6">6</div>
-                <div class="nav-btn" data-question="7">7</div>
-                <div class="nav-btn" data-question="8">8</div>
-                <div class="nav-btn" data-question="9">9</div>
-                <div class="nav-btn" data-question="10">10</div>
-            </div>
-            
-            <div id="results">
-                <div class="score">Your score: <span id="score-value">0</span>/10</div>
-                <p>Thank you for completing the Financial Statement Analysis quiz!</p>
-                <div class="feedback">
-                    <p><strong>Question Feedback:</strong></p>
-                    <p id="q1-feedback" class="correct">Question 1: Correct! Financial statement analysis is primarily used to evaluate a company's past performance and current financial position.</p>
-                    <p id="q2-feedback" class="incorrect">Question 2: Incorrect. The correct answer was D - Statement of Management Philosophy.</p>
-                    <p id="q3-feedback">Question 3: Feedback will appear here.</p>
-                    <p id="q4-feedback">Question 4: Feedback will appear here.</p>
-                    <p id="q5-feedback">Question 5: Feedback will appear here.</p>
-                    <p id="q6-feedback">Question 6: Feedback will appear here.</p>
-                    <p id="q7-feedback">Question 7: Feedback will appear here.</p>
-                    <p id="q8-feedback">Question 8: Feedback will appear here.</p>
-                    <p id="q9-feedback">Question 9: Feedback will appear here.</p>
-                    <p id="q10-feedback">Question 10: Feedback will appear here.</p>
-                </div>
-            </div>
+        <div class="module-info">
+            <h4>Chapter Topics Covered:</h4>
+            <p>Accrual Accounting • Adjusting Entries • Prepayments • Accruals • Bad Debts • Depreciation</p>
         </div>
         
-        <footer>
-            <p>University of Cape Town - Department of Finance and Tax</p>
-            <p>FTX1005S - Managerial Finance - 2025</p>
-        </footer>
+        <div id="welcomeSection">
+            <div class="welcome-back">
+                <h3>👋 Welcome to the Accounting Quiz!</h3>
+                <p>Enter your name below to get started with Chapter 2 quiz on End of Period Adjustments.</p>
+            </div>
+            <input type="text" id="introName" placeholder="Enter your full name" required />
+            <button onclick="greetUser()">Begin Quiz</button>
+        </div>
+
+        <div id="greetingSection" style="display:none;">
+            <h3 id="greetingMsg"></h3>
+            <p>This quiz covers key concepts from Chapter 2: End of Period Adjustments and Annual Reports.</p>
+            <div class="module-info">
+                <p>Topics include:</p>
+                <ul>
+                    <li>Accrual vs. Cash Basis Accounting</li>
+                    <li>Adjusting Entries (Prepayments, Accruals)</li>
+                    <li>Depreciation Methods</li>
+                    <li>Bad Debts and Allowance for Doubtful Debts</li>
+                </ul>
+            </div>
+            <button onclick="showQuizSection()">Start Quiz Now</button>
+        </div>
+
+        <div id="quizSection" style="display:none;">
+            <h3>📘 Chapter 2: End of Period Adjustments</h3>
+            <div class="progress-bar">
+                <div class="progress" id="quizProgress"></div>
+            </div>
+            <div class="question-counter" id="questionCounter">Question 1 of 20</div>
+            
+            <form id="quizForm">
+                <div class="quiz-question">
+                    <p>1. Which accounting principle requires that expenses be recorded in the same period as the revenues they helped generate?</p>
+                    <label class="option-line">A. Going Concern Principle <input type="radio" name="q1" value="A" required /></label>
+                    <label class="option-line">B. Matching Principle <input type="radio" name="q1" value="B" /></label>
+                    <label class="option-line">C. Revenue Recognition Principle <input type="radio" name="q1" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>2. Under the accrual basis of accounting, when should revenue be recognized?</p>
+                    <label class="option-line">A. When cash is received <input type="radio" name="q2" value="A" required /></label>
+                    <label class="option-line">B. When the service is performed or goods delivered <input type="radio" name="q2" value="B" /></label>
+                    <label class="option-line">C. At the end of the accounting period <input type="radio" name="q2" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>3. A company pays R12,000 for a one-year insurance policy on December 1. What is the adjusting entry needed on December 31?</p>
+                    <label class="option-line">A. Debit Prepaid Insurance R11,000; Credit Insurance Expense R11,000 <input type="radio" name="q3" value="A" required /></label>
+                    <label class="option-line">B. Debit Insurance Expense R1,000; Credit Prepaid Insurance R1,000 <input type="radio" name="q3" value="B" /></label>
+                    <label class="option-line">C. Debit Insurance Expense R12,000; Credit Cash R12,000 <input type="radio" name="q3" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>4. Which of the following is classified as a current liability?</p>
+                    <label class="option-line">A. Prepaid Expenses <input type="radio" name="q4" value="A" required /></label>
+                    <label class="option-line">B. Income Received in Advance <input type="radio" name="q4" value="B" /></label>
+                    <label class="option-line">C. Accrued Income <input type="radio" name="q4" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>5. A company receives R6,000 on January 1 for services to be provided evenly over the next 6 months. What is the adjusting entry on January 31?</p>
+                    <label class="option-line">A. Debit Cash R6,000; Credit Service Revenue R6,000 <input type="radio" name="q5" value="A" required /></label>
+                    <label class="option-line">B. Debit Service Revenue R1,000; Credit Unearned Revenue R1,000 <input type="radio" name="q5" value="B" /></label>
+                    <label class="option-line">C. Debit Unearned Revenue R1,000; Credit Service Revenue R1,000 <input type="radio" name="q5" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>6. At year-end, a company has incurred but not yet paid employee salaries of R5,000. The adjusting entry should be:</p>
+                    <label class="option-line">A. Debit Salaries Expense R5,000; Credit Cash R5,000 <input type="radio" name="q6" value="A" required /></label>
+                    <label class="option-line">B. Debit Salaries Expense R5,000; Credit Salaries Payable R5,000 <input type="radio" name="q6" value="B" /></label>
+                    <label class="option-line">C. Debit Salaries Payable R5,000; Credit Salaries Expense R5,000 <input type="radio" name="q6" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>7. Which of the following is an example of an accrued expense?</p>
+                    <label class="option-line">A. Prepaid Rent <input type="radio" name="q7" value="A" required /></label>
+                    <label class="option-line">B. Utilities used but not yet billed <input type="radio" name="q7" value="B" /></label>
+                    <label class="option-line">C. Unearned Commission <input type="radio" name="q7" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>8. The purpose of recording depreciation is to:</p>
+                    <label class="option-line">A. Reflect the current market value of an asset <input type="radio" name="q8" value="A" required /></label>
+                    <label class="option-line">B. Set aside cash for asset replacement <input type="radio" name="q8" value="B" /></label>
+                    <label class="option-line">C. Allocate the cost of an asset to expense over its useful life <input type="radio" name="q8" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>9. Using the straight-line method, what is the annual depreciation for equipment costing R80,000 with a residual value of R8,000 and a useful life of 8 years?</p>
+                    <label class="option-line">A. R9,000 <input type="radio" name="q9" value="A" required /></label>
+                    <label class="option-line">B. R10,000 <input type="radio" name="q9" value="B" /></label>
+                    <label class="option-line">C. R8,000 <input type="radio" name="q9" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>10. Which depreciation method results in higher expenses in the early years of an asset's life?</p>
+                    <label class="option-line">A. Straight-line method <input type="radio" name="q10" value="A" required /></label>
+                    <label class="option-line">B. Reducing balance method <input type="radio" name="q10" value="B" /></label>
+                    <label class="option-line">C. Units of production method <input type="radio" name="q10" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>11. When writing off a specific customer's account as uncollectible, the journal entry is:</p>
+                    <label class="option-line">A. Debit Bad Debts Expense; Credit Accounts Receivable <input type="radio" name="q11" value="A" required /></label>
+                    <label class="option-line">B. Debit Allowance for Doubtful Debts; Credit Accounts Receivable <input type="radio" name="q11" value="B" /></label>
+                    <label class="option-line">C. Debit Accounts Receivable; Credit Bad Debts Expense <input type="radio" name="q11" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>12. The Allowance for Doubtful Debts account is classified as:</p>
+                    <label class="option-line">A. An expense account <input type="radio" name="q12" value="A" required /></label>
+                    <label class="option-line">B. A contra asset account <input type="radio" name="q12" value="B" /></label>
+                    <label class="option-line">C. A liability account <input type="radio" name="q12" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>13. Which accounting concept suggests that we should not overstate assets or income?</p>
+                    <label class="option-line">A. Going Concern Concept <input type="radio" name="q13" value="A" required /></label>
+                    <label class="option-line">B. Prudence Concept <input type="radio" name="q13" value="B" /></label>
+                    <label class="option-line">C. Materiality Concept <input type="radio" name="q13" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>14. Stationery purchased during the year was recorded as an expense. At year-end, unused stationery worth R1,200 is on hand. The adjusting entry is:</p>
+                    <label class="option-line">A. Debit Stationery Expense R1,200; Credit Stationery on Hand R1,200 <input type="radio" name="q14" value="A" required /></label>
+                    <label class="option-line">B. Debit Stationery on Hand R1,200; Credit Stationery Expense R1,200 <input type="radio" name="q14" value="B" /></label>
+                    <label class="option-line">C. Debit Stationery on Hand R1,200; Credit Cash R1,200 <input type="radio" name="q14" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>15. Which financial statement reports a company's financial position at a specific point in time?</p>
+                    <label class="option-line">A. Income Statement <input type="radio" name="q15" value="A" required /></label>
+                    <label class="option-line">B. Statement of Financial Position <input type="radio" name="q15" value="B" /></label>
+                    <label class="option-line">C. Statement of Cash Flows <input type="radio" name="q15" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>16. The Pre-Adjustment Trial Balance is prepared:</p>
+                    <label class="option-line">A. After all adjusting entries are posted <input type="radio" name="q16" value="A" required /></label>
+                    <label class="option-line">B. Before any adjusting entries are journalized <input type="radio" name="q16" value="B" /></label>
+                    <label class="option-line">C. After the financial statements are prepared <input type="radio" name="q16" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>17. Which of the following is NOT a characteristic of the accrual basis of accounting?</p>
+                    <label class="option-line">A. Revenues are recognized when earned <input type="radio" name="q17" value="A" required /></label>
+                    <label class="option-line">B. Expenses are recognized when incurred <input type="radio" name="q17" value="B" /></label>
+                    <label class="option-line">C. Cash receipts are recorded as revenue <input type="radio" name="q17" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>18. The net book value of an asset is calculated as:</p>
+                    <label class="option-line">A. Cost + Accumulated Depreciation <input type="radio" name="q18" value="A" required /></label>
+                    <label class="option-line">B. Cost - Accumulated Depreciation <input type="radio" name="q18" value="B" /></label>
+                    <label class="option-line">C. Market Value - Accumulated Depreciation <input type="radio" name="q18" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>19. Which of the following causes depreciation of fixed assets?</p>
+                    <label class="option-line">A. Wear and tear <input type="radio" name="q19" value="A" required /></label>
+                    <label class="option-line">B. Increase in market value <input type="radio" name="q19" value="B" /></label>
+                    <label class="option-line">C. Inflation <input type="radio" name="q19" value="C" /></label>
+                </div>
+
+                <div class="quiz-question">
+                    <p>20. The purpose of making adjusting entries is to:</p>
+                    <label class="option-line">A. Correct errors in the accounting records <input type="radio" name="q20" value="A" required /></label>
+                    <label class="option-line">B. Ensure revenues and expenses are recorded in the proper period <input type="radio" name="q20" value="B" /></label>
+                    <label class="option-line">C. Record transactions that occurred on the last day of the period <input type="radio" name="q20" value="C" /></label>
+                </div>
+                
+                <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+            </form>
+            <p id="result"></p>
+        </div>
+
+        <div id="thankYou" style="display:none;">
+            <h3>🎉 Thank you for completing the quiz!</h3>
+            <p id="finalScore"></p>
+            <p>Review the chapter materials to strengthen your understanding of any challenging concepts.</p>
+            <button onclick="location.reload()">Take Again</button>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const questions = document.querySelectorAll('.question');
-            const navButtons = document.querySelectorAll('.nav-btn');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const submitBtn = document.getElementById('submit-btn');
-            let currentQuestion = 0;
-            
-            // Show the first question initially
-            showQuestion(currentQuestion);
-            
-            // Next button click event
-            nextBtn.addEventListener('click', function() {
-                if (currentQuestion < questions.length - 1) {
-                    currentQuestion++;
-                    showQuestion(currentQuestion);
-                }
-            });
-            
-            // Previous button click event
-            prevBtn.addEventListener('click', function() {
-                if (currentQuestion > 0) {
-                    currentQuestion--;
-                    showQuestion(currentQuestion);
-                }
-            });
-            
-            // Navigation buttons click event
-            navButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    currentQuestion = parseInt(this.getAttribute('data-question')) - 1;
-                    showQuestion(currentQuestion);
-                });
-            });
-            
-            // Submit button click event
-            submitBtn.addEventListener('click', function() {
-                calculateScore();
-                document.getElementById('results').style.display = 'block';
-                document.querySelector('.quiz-container').style.paddingBottom = '20px';
-            });
-            
-            function showQuestion(index) {
-                // Hide all questions
-                questions.forEach(question => {
-                    question.style.display = 'none';
-                });
-                
-                // Show the current question
-                questions[index].style.display = 'block';
-                
-                // Update navigation buttons
-                navButtons.forEach(button => {
-                    button.classList.remove('current');
-                });
-                navButtons[index].classList.add('current');
-                
-                // Show/hide navigation buttons
-                prevBtn.style.display = index === 0 ? 'none' : 'block';
-                nextBtn.style.display = index === questions.length - 1 ? 'none' : 'block';
-                submitBtn.style.display = index === questions.length - 1 ? 'block' : 'none';
+        // Store correct answers
+        const correctAnswers = {
+            q1: 'B',
+            q2: 'B',
+            q3: 'B',
+            q4: 'B',
+            q5: 'C',
+            q6: 'B',
+            q7: 'B',
+            q8: 'C',
+            q9: 'A',
+            q10: 'B',
+            q11: 'B',
+            q12: 'B',
+            q13: 'B',
+            q14: 'B',
+            q15: 'B',
+            q16: 'B',
+            q17: 'C',
+            q18: 'B',
+            q19: 'A',
+            q20: 'B'
+        };
+        
+        let userName = '';
+        
+        function greetUser() {
+            const nameInput = document.getElementById('introName');
+            if (nameInput.value.trim() === '') {
+                alert('Please enter your name to continue.');
+                return;
             }
             
-            function calculateScore() {
-                // This is a simplified version - in a real application, you would check answers against a key
-                const score = Math.floor(Math.random() * 11); // Random score for demonstration
-                document.getElementById('score-value').textContent = score;
-                
-                // Update feedback for each question (simplified)
-                if (score > 5) {
-                    document.getElementById('q1-feedback').className = 'correct';
-                    document.getElementById('q1-feedback').textContent = 'Question 1: Correct! Financial statement analysis is primarily used to evaluate a company\'s past performance and current financial position.';
-                } else {
-                    document.getElementById('q1-feedback').className = 'incorrect';
-                    document.getElementById('q1-feedback').textContent = 'Question 1: Incorrect. The correct answer was B - To evaluate a company\'s past performance and current financial position.';
-                }
-            }
+            userName = nameInput.value.trim();
+            document.getElementById('greetingMsg').textContent = `Welcome, ${userName}! Ready for the Chapter 2 quiz?`;
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('greetingSection').style.display = 'block';
+        }
+        
+        function showQuizSection() {
+            document.getElementById('greetingSection').style.display = 'none';
+            document.getElementById('quizSection').style.display = 'block';
+            updateProgressBar();
+        }
+        
+        function updateProgressBar() {
+            const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answered / 20) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            document.getElementById('questionCounter').textContent = `Question ${answered+1} of 20`;
+        }
+        
+        // Add event listeners to radio buttons to update progress
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updateProgressBar);
         });
+        
+        function submitQuiz() {
+            let score = 0;
+            const form = document.getElementById('quizForm');
+            
+            // Check if all questions are answered
+            let allAnswered = true;
+            for (let i = 1; i <= 20; i++) {
+                const questionName = `q${i}`;
+                if (!document.querySelector(`input[name="${questionName}"]:checked`)) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+            
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+            
+            // Calculate score
+            for (let i = 1; i <= 20; i++) {
+                const questionName = `q${i}`;
+                const selected = document.querySelector(`input[name="${questionName}"]:checked`).value;
+                
+                if (selected === correctAnswers[questionName]) {
+                    score++;
+                    // Highlight correct answer
+                    const correctOption = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                } else {
+                    // Highlight correct answer and incorrect selection
+                    const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`).parentElement;
+                    selectedOption.classList.add('incorrect');
+                    
+                    const correctOption = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                }
+            }
+            
+            // Show results
+            const percentage = Math.round((score / 20) * 100);
+            let message = '';
+            
+            if (percentage >= 80) {
+                message = `🎉 Excellent work, ${userName}! You scored ${score}/20 (${percentage}%)`;
+            } else if (percentage >= 60) {
+                message = `👍 Good job, ${userName}! You scored ${score}/20 (${percentage}%)`;
+            } else {
+                message = `📚 Keep studying, ${userName}. You scored ${score}/20 (${percentage}%)`;
+            }
+            
+            document.getElementById('result').textContent = message;
+            document.getElementById('result').className = percentage >= 60 ? 'correct' : 'incorrect';
+            
+            // Scroll to results
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            
+            // Disable form after submission
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+            
+            // Change submit button to show thank you
+            const submitBtn = form.querySelector('button');
+            submitBtn.textContent = 'View Results';
+            submitBtn.onclick = function() {
+                document.getElementById('quizSection').style.display = 'none';
+                document.getElementById('thankYou').style.display = 'block';
+                document.getElementById('finalScore').textContent = `Final Score: ${score}/20 (${percentage}%)`;
+            };
+        }
     </script>
 </body>
 </html>
